@@ -8,4 +8,4 @@ file(GLOB INCLUDES "include/*.h")
 
 add_executable(r-type_server ${SOURCES} ${INCLUDES})
 
-target_link_libraries (r-type_server ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries (r-type_server Threads::Threads) 

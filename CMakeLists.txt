@@ -1,5 +1,5 @@
 project(Babel)
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.5)
 add_definitions("-fPIC")
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)

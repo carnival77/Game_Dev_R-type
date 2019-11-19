@@ -8,4 +8,4 @@ file(GLOB INCLUDES "include/*.h")
 
 add_executable(r-type_client ${SOURCES} ${INCLUDES})
 
-target_link_libraries (r-type_client ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries (r-type_client Threads::Threads sfml-window sfml-system sfml-audio sfml-graphics)
