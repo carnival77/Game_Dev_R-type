@@ -1,5 +1,5 @@
 find_package(Threads)
-
+SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 include_directories(${CMAKE_INCLUDE_PATH})
 include_directories(include)
 

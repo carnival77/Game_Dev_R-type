@@ -1,2 +1,4 @@
 build/
 .vscode/
+client/r-type_client
+server/r-type_server
