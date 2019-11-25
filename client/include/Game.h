@@ -3,6 +3,7 @@
 #include "player.h"
 #include "enemy.h"
 #include "missile.h"
+#include "background.h"
 
 class Game
 {
@@ -17,6 +18,7 @@ private:
 
     sf::RenderWindow window;
     Player player;
+    Background background;
     vector<Enemy> enemies;
     vector<Missile> missiles;
 };

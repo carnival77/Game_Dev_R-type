@@ -1,7 +1,8 @@
 #include "Game.h"
 #include <iostream>
 
-Game::Game() : window(sf::VideoMode::getDesktopMode(), "Client Rtype", sf::Style::Close)
+Game::Game() : window(sf::VideoMode::getDesktopMode(), "Client Rtype", sf::Style::Close),
+               background("./textures/background.jpg")
 {
     //window.setFramerateLimit(60);
 }
@@ -95,8 +96,10 @@ void Game::update()
 
 void Game::render()
 {
-    window.clear();
+    window.clear(sf::Color(66, 66, 132, 255));
 
+    window.draw(background.sprite);
+    
     //draw()
     //Draw enemies
     for (size_t i = 0; i < enemies.size(); i++) window.draw(enemies[i].sprite);
