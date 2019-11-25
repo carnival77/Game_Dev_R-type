@@ -15,7 +15,7 @@ float getDistance(sf::Vector2f fst, sf::Vector2f snd)
 
 int main()
 {
-    srand(time(NULL));
+    srand(time(NULL));  // initialise seed for random number generator
     std::cout << "I'm the client\n";
     sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Client Window", sf::Style::Close);
     sf::Event evnt;
