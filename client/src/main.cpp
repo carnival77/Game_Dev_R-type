@@ -1,19 +1,35 @@
 #include <iostream>
-#include "Game.h"
-
-// float getDistance(sf::Vector2f fst, sf::Vector2f snd)
-// {
-//     const float x_diff = fst.x - snd.x;
-//     const float y_diff = fst.y - snd.y;
-//     return std::sqrt(x_diff * x_diff + y_diff * y_diff);
-// }
+#include "screens.h"
 
 
-int main()
+int main(int argc, char** argv)
 {
     std::cout << "I'm the client\n";
     srand(time(NULL));  // initialise seed for random number generator
-    Game game;
-    game.run();
+
+    std::vector<cScreen*> Screens;
+	int state = 1;
+
+	//Window creation
+	sf::RenderWindow app(sf::VideoMode::getDesktopMode(), "Client Rtype", sf::Style::Close);
+
+    app.setFramerateLimit(60);
+
+	//App.setMouseCursorVisible(false);
+
+	//Screens preparations
+    float height = app.getSize().y;
+    float width = app.getSize().x;
+	Game game;
+	Screens.push_back(&game);
+	Menu menu(width, height);
+	Screens.push_back(&menu);
+
+	//Main loop
+	while (state >= 0)
+	{
+		state = Screens[state]->run(app);
+	}
+    app.close();
     return 0;
 }

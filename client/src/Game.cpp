@@ -1,26 +1,20 @@
 #include "Game.h"
 #include <iostream>
 
-Game::Game() : window(sf::VideoMode::getDesktopMode(), "Client Rtype", sf::Style::Close),
-               background("./textures/background.jpg")
+Game::Game() : background("./textures/background.jpg")
 {
-    window.setFramerateLimit(60);
+
 }
 
-void Game::run()
+int Game::run(sf::RenderWindow &window)
 {
-    while (window.isOpen())
-    {
-        processEvents();
-        update();
-        render();
-        time = clock.getElapsedTime();
-        cout << 1.0f/time.asSeconds() << endl;
-        clock.restart().asSeconds();
-    }
+    int state = processEvents(window);
+    update(window);
+    render(window);
+    return state;
 }
 
-void Game::processEvents()
+int Game::processEvents(sf::RenderWindow &window)
 {
     sf::Event event;
     while (window.pollEvent(event))
@@ -28,13 +22,20 @@ void Game::processEvents()
         switch (event.type)
         {
         case sf::Event::Closed:
-            window.close();
+            return -1;
             break;
+        case sf::Event::KeyPressed:
+            switch (event.key.code)
+            {
+                case sf::Keyboard::Escape:
+                    return 1;
+                    break;
+            }
         }
     }
 }
 
-void Game::update()
+void Game::update(sf::RenderWindow &window)
 {
     static int generator = 0;
     static const int power = 120; 
@@ -95,7 +96,7 @@ void Game::update()
     }
 }
 
-void Game::render()
+void Game::render(sf::RenderWindow &window)
 {
     window.clear(/*sf::Color(66, 66, 132, 255)*/);
 
