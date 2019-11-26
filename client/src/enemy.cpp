@@ -2,10 +2,9 @@
 #include <iostream>
 Enemy::Enemy(int x, int y)
 {
-    animation = loadEnemyShip();
+    animation = loadRedShip();
     sprite = animation[0];
-    sprite.setPosition(x,y);
-    
+    sprite.setPosition(x,y); 
 }
 
 Enemy::~Enemy()

@@ -21,7 +21,7 @@ vector<sf::Sprite> loadPlayerShip()
     return result;
 }
 
-vector<sf::Sprite> loadEnemyShip()
+vector<sf::Sprite> loadRedShip()
 {
     sf::Texture * playerTexture = new sf::Texture;
     playerTexture->loadFromFile("./textures/r-typesheet5.gif");
@@ -33,7 +33,7 @@ vector<sf::Sprite> loadEnemyShip()
     sprite.setTexture(*playerTexture);
     for (int i = 0; i < 4; i++)
     {
-        sprite.setTextureRect(sf::IntRect(shapeSize.x * i, 0, shapeSize.x, shapeSize.y));
+        sprite.setTextureRect(sf::IntRect(shapeSize.x * i, 6, shapeSize.x, shapeSize.y - 12));
         sprite.setScale(sf::Vector2f(3,3));
         result.push_back(sprite);
     }
@@ -43,14 +43,14 @@ vector<sf::Sprite> loadEnemyShip()
 sf::Sprite loadPlayerMissile()
 {
     sf::Texture * playerTexture = new sf::Texture;
-    playerTexture->loadFromFile("./textures/r-typesheet9.gif");
+    playerTexture->loadFromFile("./textures/r-typesheet1.gif");
 
     sf::Vector2u shapeSize = playerTexture->getSize();
     shapeSize.x /= 12;
     shapeSize.y /= 5;
     sf::Sprite sprite;
     sprite.setTexture(*playerTexture);
-    sprite.setTextureRect(sf::IntRect(shapeSize.x * 5, shapeSize.y * 4, shapeSize.x, shapeSize.y));
+    sprite.setTextureRect(sf::IntRect(249, 90, 16, 4));
     sprite.setScale(sf::Vector2f(3,3));
  
     return sprite;

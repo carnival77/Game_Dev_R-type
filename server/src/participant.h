@@ -2,7 +2,7 @@
 #define PARTICIPANT_H
 #include <string>
 #include "structdata.h"
-#include <boost\shared_ptr.hpp>
+#include <boost/shared_ptr.hpp>
 
 class participant {
 public: 

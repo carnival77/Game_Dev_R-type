@@ -5,5 +5,5 @@
 using namespace std;
 
 vector<sf::Sprite> loadPlayerShip();
-vector<sf::Sprite> loadEnemyShip();
+vector<sf::Sprite> loadRedShip();
 sf::Sprite loadPlayerMissile();

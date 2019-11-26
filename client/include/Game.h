@@ -21,4 +21,7 @@ private:
     Background background;
     vector<Enemy> enemies;
     vector<Missile> missiles;
+
+    sf::Clock clock;
+    sf::Time time;
 };

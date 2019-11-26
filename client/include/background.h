@@ -9,4 +9,5 @@ class Background {
         ~Background();
         sf::Texture texture;
         sf::Sprite sprite;
+        void scroll(float speed);
 };

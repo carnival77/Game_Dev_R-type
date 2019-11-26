@@ -4,7 +4,7 @@
 Game::Game() : window(sf::VideoMode::getDesktopMode(), "Client Rtype", sf::Style::Close),
                background("./textures/background.jpg")
 {
-    //window.setFramerateLimit(60);
+    window.setFramerateLimit(60);
 }
 
 void Game::run()
@@ -14,6 +14,9 @@ void Game::run()
         processEvents();
         update();
         render();
+        time = clock.getElapsedTime();
+        cout << 1.0f/time.asSeconds() << endl;
+        clock.restart().asSeconds();
     }
 }
 
@@ -54,10 +57,10 @@ void Game::update()
         }
     }
     //Player shooting mechanic
-    static const float speed = 0.7;
+    static const float speed = 4;
     if(player.movePlayer(speed))
     {
-        Missile dummy(player.sprite.getPosition().x + 50 , player.sprite.getPosition().y);
+        Missile dummy(player.sprite.getPosition().x + 50 , player.sprite.getPosition().y + 40);
         missiles.push_back(dummy);
     }
     //Update missiles and check collisions
@@ -90,23 +93,48 @@ void Game::update()
             window.close();
         }
     }
-    
-
 }
 
 void Game::render()
 {
-    window.clear(sf::Color(66, 66, 132, 255));
+    window.clear(/*sf::Color(66, 66, 132, 255)*/);
 
     window.draw(background.sprite);
     
     //draw()
     //Draw enemies
-    for (size_t i = 0; i < enemies.size(); i++) window.draw(enemies[i].sprite);
+    for (size_t i = 0; i < enemies.size(); i++) 
+    {
+        window.draw(enemies[i].sprite);
+        sf::FloatRect dummy = enemies[i].sprite.getGlobalBounds();
+        sf::RectangleShape dummy2(sf::Vector2f(dummy.width, dummy.height));
+        dummy2.setOutlineThickness(2);
+        dummy2.setOutlineColor(sf::Color::Red);
+        dummy2.setFillColor(sf::Color(0,0,0,0));
+        dummy2.setPosition(enemies[i].sprite.getPosition());
+        window.draw(dummy2);
+
+    }
     //Draw missiles
-    for (size_t i = 0; i < missiles.size(); i++) window.draw(missiles[i].sprite);
+    for (size_t i = 0; i < missiles.size(); i++)
+    { 
+        window.draw(missiles[i].sprite);
+        sf::FloatRect dummy = missiles[i].sprite.getGlobalBounds();
+        sf::RectangleShape dummy2(sf::Vector2f(dummy.width, dummy.height));
+        dummy2.setOutlineThickness(2);
+        dummy2.setOutlineColor(sf::Color::Red);
+        dummy2.setFillColor(sf::Color(0,0,0,0));
+        dummy2.setPosition(missiles[i].sprite.getPosition());
+        window.draw(dummy2);
+    }
     //Draw player
     window.draw(player.sprite);
-
+    sf::FloatRect dummy = player.sprite.getGlobalBounds();
+    sf::RectangleShape dummy2(sf::Vector2f(dummy.width, dummy.height));
+    dummy2.setOutlineThickness(2);
+    dummy2.setOutlineColor(sf::Color::Red);
+    dummy2.setFillColor(sf::Color(0,0,0,0));
+    dummy2.setPosition(player.sprite.getPosition());
+    window.draw(dummy2);
     window.display();
 }
