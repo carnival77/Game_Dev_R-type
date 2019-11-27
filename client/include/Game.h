@@ -3,7 +3,6 @@
 #include "player.h"
 #include "enemy.h"
 #include "missile.h"
-#include "background.h"
 #include "cScreen.h"
 #include "cTexture.h"
 

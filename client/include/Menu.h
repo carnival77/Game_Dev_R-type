@@ -1,13 +1,14 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "cScreen.h"
+#include "constants.h"
 
 #define ITEMS 2
 
 class Menu : public cScreen
 {
 public:
-    Menu(float width, float height);
+    Menu();
     ~Menu();
     virtual int run(sf::RenderWindow &window);
 private:

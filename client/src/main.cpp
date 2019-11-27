@@ -1,5 +1,6 @@
 #include <iostream>
 #include "screens.h"
+#include "constants.h"
 
 
 int main(int argc, char** argv)
@@ -11,18 +12,16 @@ int main(int argc, char** argv)
 	int state = 1;
 
 	//Window creation
-	sf::RenderWindow app(sf::VideoMode::getDesktopMode(), "Client Rtype", sf::Style::Close);
+	sf::RenderWindow app(sf::VideoMode(sWidth, sHeight), "Client Rtype", sf::Style::Close);
 
     app.setFramerateLimit(60);
 
 	//App.setMouseCursorVisible(false);
 
 	//Screens preparations
-    float height = app.getSize().y;
-    float width = app.getSize().x;
 	Game game;
 	Screens.push_back(&game);
-	Menu menu(width, height);
+	Menu menu;
 	Screens.push_back(&menu);
 
 	//Main loop
