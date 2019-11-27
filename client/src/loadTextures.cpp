@@ -3,7 +3,7 @@
 vector<sf::Sprite> loadPlayerShip()
 {
     sf::Texture * playerTexture = new sf::Texture;
-    playerTexture->loadFromFile("./textures/r-typesheet42.gif");
+    playerTexture->loadFromFile("./textures/players.gif");
     //playerTexture->setSmooth(true);
     sf::Vector2u shapeSize = playerTexture->getSize();
     shapeSize.x /= 5;
@@ -24,7 +24,7 @@ vector<sf::Sprite> loadPlayerShip()
 vector<sf::Sprite> loadRedShip()
 {
     sf::Texture * playerTexture = new sf::Texture;
-    playerTexture->loadFromFile("./textures/r-typesheet5.gif");
+    playerTexture->loadFromFile("./textures/redEnemyShip.gif");
 
     sf::Vector2u shapeSize = playerTexture->getSize();
     shapeSize.x /= 16;
@@ -43,7 +43,7 @@ vector<sf::Sprite> loadRedShip()
 sf::Sprite loadPlayerMissile()
 {
     sf::Texture * playerTexture = new sf::Texture;
-    playerTexture->loadFromFile("./textures/r-typesheet1.gif");
+    playerTexture->loadFromFile("./textures/playerMissiles.gif");
 
     sf::Vector2u shapeSize = playerTexture->getSize();
     shapeSize.x /= 12;

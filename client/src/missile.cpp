@@ -12,7 +12,7 @@ Missile::~Missile()
 
 bool Missile::moveMissile(sf::Vector2u winSize)
 {
-    sprite.move(2,0);
+    sprite.move(8,0);
     if(sprite.getPosition().x > winSize.x || sprite.getPosition().x < 0)
     {
         return false;

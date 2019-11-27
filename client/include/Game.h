@@ -5,6 +5,7 @@
 #include "missile.h"
 #include "background.h"
 #include "cScreen.h"
+#include "cTexture.h"
 
 class Game : public cScreen
 {
@@ -14,14 +15,15 @@ public:
 
 private:
     int processEvents(sf::RenderWindow &window);
-    void update(sf::RenderWindow &window);
+    int update(sf::RenderWindow &window);
     void render(sf::RenderWindow &window);
+    void loadTextures();
 
     Player player;
-    Background background;
+    //Background background;
     vector<Enemy> enemies;
     vector<Missile> missiles;
+    sf::Sprite background;
 
-    sf::Clock clock;
-    sf::Time time;
+    cTexture textures;
 };
