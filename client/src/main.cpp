@@ -15,10 +15,10 @@ using boost::asio::ip::udp;
 // }
 
 
-unsigned short port = 6667;
-sf::IpAddress ip = "localhost";
-unsigned short serverPort = 6666;
-sf::IpAddress serverIp = "localhost";
+// unsigned short port = 6667;
+// sf::IpAddress ip = "localhost";
+// unsigned short serverPort = 6666;
+// sf::IpAddress serverIp = "localhost";
 
 
 int main()
@@ -27,12 +27,13 @@ int main()
     srand(time(NULL));  // initialise seed for random number generator
 
     std::cout << "Sending message to the server\n";
+    string hostname = "localhost";
     try {
         boost::asio::io_context io_context;
 
         udp::resolver resolver(io_context);
         udp::endpoint receiver_endpoint =
-        *resolver.resolve(udp::v4(), argv[1], "daytime").begin();
+        *resolver.resolve(udp::v4(), hostname, "daytime").begin();
 
         udp::socket socket(io_context);
         socket.open(udp::v4());
@@ -46,6 +47,8 @@ int main()
             boost::asio::buffer(recv_buf), sender_endpoint);
 
         std::cout.write(recv_buf.data(), len);
+    } catch (std::exception& e) {
+        std::cerr << e.what() << std::endl;
     }
     // sf::UdpSocket socket;
 
@@ -53,38 +56,38 @@ int main()
     // game.run();
 
     // prepare data to send
-    sf::Packet packet;
-    string data = "message from client";
-    packet << data;
+    // sf::Packet packet;
+    // string data = "message from client";
+    // packet << data;
 
-    // send data
-    for (int i = 0; i < 1000; i++) {
-    if (socket.send(packet, serverIp, serverPort) != sf::Socket::Done)
-    {
-        std::cerr << "Error sending data\n";
-        // error...
-    }
-    }
+    // // send data
+    // for (int i = 0; i < 1000; i++) {
+    // if (socket.send(packet, serverIp, serverPort) != sf::Socket::Done)
+    // {
+    //     std::cerr << "Error sending data\n";
+    //     // error...
+    // }
+    // }
 
-    std::cout << "Receiving a message from the server\n";
-    // bind the socket (prepare to listen)
-    if (socket.bind(port, ip) != sf::Socket::Done) {
-        std::cerr << "Error binding to socket\n";
-        // error...
-    }
+    // std::cout << "Receiving a message from the server\n";
+    // // bind the socket (prepare to listen)
+    // if (socket.bind(port, ip) != sf::Socket::Done) {
+    //     std::cerr << "Error binding to socket\n";
+    //     // error...
+    // }
 
-    // receive data
-    if (socket.receive(packet, ip, port) != sf::Socket::Done) {
-        std::cerr << "Error receiving data\n";
-    } else {
-        std:cout << "Received data\n";
-    }
+    // // receive data
+    // if (socket.receive(packet, ip, port) != sf::Socket::Done) {
+    //     std::cerr << "Error receiving data\n";
+    // } else {
+    //     std:cout << "Received data\n";
+    // }
 
-    if (packet >> data) {
-        std::cout << "Received: " << data << "\n";
-    } else {
-        std::cerr << "Error reading received data from packet\n";
-    }
+    // if (packet >> data) {
+    //     std::cout << "Received: " << data << "\n";
+    // } else {
+    //     std::cerr << "Error reading received data from packet\n";
+    // }
 
     // Game game;
     // game.run();

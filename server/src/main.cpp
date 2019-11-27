@@ -61,7 +61,7 @@ class Server {
 
     udp::socket socket_;
     udp::endpoint remote_endpoint_;
-    boost::array<char, 1> recv_buffer_;
+    boost::array<char, 1> recv_buffer_;argv[1]
 };
 
 
