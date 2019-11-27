@@ -8,4 +8,4 @@ file(GLOB INCLUDES "include/*.h")
 
 add_executable(test_client ${SOURCES} ${INCLUDES})
 
-target_link_libraries (test_client Threads::Threads sfml-window sfml-system sfml-audio sfml-graphics) 
+target_link_libraries (test_client Threads::Threads sfml-window sfml-system sfml-audio sfml-graphics sfml-network) 
