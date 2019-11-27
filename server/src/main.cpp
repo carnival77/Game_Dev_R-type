@@ -21,16 +21,14 @@ public:
 private:
   void start_receive()
   {
-    std::string data = std::string("");
+    // std::string data = std::string("");
     // boost::asio::mutable_buffer buf = boost::asio::buffer(data);
-    boost::array<char, 128> buf;
 
-    size_t len = socket_.receive_from(
-        boost::asio::buffer(buf), remote_endpoint_);
-    std::cout.write(buf.data(), len); // write up to the length (else we read garbage)
+    // size_t len = socket_.receive_from(
+    //     boost::asio::buffer(buf), remote_endpoint_);
 
     socket_.async_receive_from(
-        buf, // reception buffer
+        boost::asio::buffer(recv_buffer_), // reception buffer
         remote_endpoint_, // endpoint
         boost::bind(&udp_server::handle_receive, this,  // handler
           boost::asio::placeholders::error,
@@ -43,12 +41,12 @@ private:
       std::size_t bytes_transferred)
   {
     // we can use instance variables in this handler because "this" was bound to it
-    std::cout << recv_buffer_.data() << "*\n";
+    std::cout.write(recv_buffer_.data(), bytes_transferred); // write up to the length (else we read garbage)
     if (error) {
       std::cerr << "( " << error << " )" << error.message() << std::endl;
     } else {
       boost::shared_ptr<std::string> message(
-          new std::string("hello there\n"));
+          new std::string("hello from server\n"));
 
       socket_.async_send_to(boost::asio::buffer(*message), remote_endpoint_,
           boost::bind(&udp_server::handle_send, this, message,
@@ -67,7 +65,7 @@ private:
 
   udp::socket socket_;
   udp::endpoint remote_endpoint_;
-  boost::asio::mutable_buffer recv_buffer_;
+  boost::array<char, 128> recv_buffer_;
 };
 
 
