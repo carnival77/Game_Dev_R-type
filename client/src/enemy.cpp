@@ -18,5 +18,5 @@ void Enemy::enemyMove()
     //std::cout << state << "\n";
     //sprite = animation[0];
     //sprite.setPosition(pos);
-    sprite.move(sf::Vector2f(-0.7,0));
+    sprite.move(sf::Vector2f(-5,0));
 }
