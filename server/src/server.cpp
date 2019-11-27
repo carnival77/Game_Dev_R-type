@@ -1,75 +1,80 @@
-#include "server.h"
-
+#include <ctime>
+#include <iostream>
+#include <string>
+#include <boost/array.hpp>
+#include <boost/bind.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/asio.hpp>
 using boost::asio::ip::udp;
-namespace pt = boost::property_tree;
+using namespace std;
 
-server::server(std::string address, std::string port) : io_service(),
-socket_(boost::make_shared<boost::asio::ip::udp::socket>
-(io_service, udp::endpoint(udp::v4(), 80)))
+std::string make_daytime_string()
 {
-	start_receive();
+  using namespace std; // For time_t, time and ctime;
+  time_t now = time(0);
+  return ctime(&now);
 }
 
-void server::run() {
-
-	io_service.run();
-}
-
-void server::start_receive()
+class udp_server
 {
-	socket_->async_receive_from(
-		boost::asio::buffer(recv_buffer_), remote_endpoint_,
-		boost::bind(&server::handle_receive, this,
-			boost::asio::placeholders::error,
-			boost::asio::placeholders::bytes_transferred));
-}
+public:
+  udp_server(boost::asio::io_service& io_service)
+    : socket_(io_service, udp::endpoint(udp::v4(), 13))
+  {
+    start_receive();
+  }
 
-void server::handle_receive(const boost::system::error_code& error,
-	std::size_t bytes_transferred)
+private:
+  void start_receive()
+  {
+      cout<<"server connected"<<endl;
+    socket_.async_receive_from(
+        boost::asio::buffer(recv_buffer_), remote_endpoint_,
+        boost::bind(&udp_server::handle_receive, this,
+          boost::asio::placeholders::error,
+          boost::asio::placeholders::bytes_transferred));
+  }
+
+  void handle_receive(const boost::system::error_code& error,
+      std::size_t /*bytes_transferred*/)
+  {
+    if (!error || error == boost::asio::error::message_size)
+    {
+      boost::shared_ptr<std::string> message(
+          new std::string(make_daytime_string()));
+
+      socket_.async_send_to(boost::asio::buffer(*message), remote_endpoint_,
+          boost::bind(&udp_server::handle_send, this, message,
+            boost::asio::placeholders::error,
+            boost::asio::placeholders::bytes_transferred));
+
+      start_receive();
+    }
+  }
+
+  void handle_send(boost::shared_ptr<std::string> /*message*/,
+      const boost::system::error_code& /*error*/,
+      std::size_t /*bytes_transferred*/)
+  {
+  }
+
+  udp::socket socket_;
+  udp::endpoint remote_endpoint_;
+  boost::array<char, 1> recv_buffer_;
+};
+
+int main()
 {
-	if (!error || error == boost::asio::error::message_size)
-	{
-		
-		std::string receive_json = std::string(recv_buffer_.begin(), 
-			recv_buffer_.begin() + bytes_transferred);
-		//std::cout << receive_json << std::endl;
-		pt::ptree root;
-		std::stringstream ss;
-		ss << receive_json;
+  try
+  {
+    boost::asio::io_service io_service;
+    udp_server server(io_service);
+    io_service.run();
+  }
+  catch (std::exception& e)
+  {
+    std::cerr << e.what() << std::endl;
+  }
 
-		try
-		{
-			pt::read_json(ss, root);
-		}
-		catch (std::exception &e)
-		{
-			std::cout << "Error: " << e.what() << std::endl;
-		}
-
-		std::string type = root.get<std::string>("type");
-		if (type == "connection") {
-
-			new_session.reset(new session(socket_, remote_endpoint_, room_));
-			new_session->start();
-		}
-		else if (type == "movement") {
-			float x = root.get<float>("x", 0);
-			float y = root.get<float>("y", 0);
-			room_.updatePosition(boost::lexical_cast<std::string>(remote_endpoint_.port()) , { x , y});
-		}
-
-		start_receive();
-	}
-}
-
-void server::handle_send(boost::shared_ptr<std::string> message,
-	const boost::system::error_code& error,
-	std::size_t bytes_transferre)
-{
-	if (!error) {
-		std::cout << *message << " was sent" << std::endl;
-	}
-	else {
-		std::cout << error.message() << std::endl;
-	}
+  return 0;
 }

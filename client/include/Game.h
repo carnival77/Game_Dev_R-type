@@ -5,19 +5,19 @@
 #include "missile.h"
 #include "background.h"
 #include <boost/asio.hpp>
+#include "cScreen.h"
 
-class Game
+class Game : public cScreen
 {
 public:
     Game();
-    void run();
+    virtual int run(sf::RenderWindow &window);
 
 private:
-    void processEvents();
-    void update();
-    void render();
+    int processEvents(sf::RenderWindow &window);
+    void update(sf::RenderWindow &window);
+    void render(sf::RenderWindow &window);
 
-    sf::RenderWindow window;
     Player player;
     Background background;
     vector<Enemy> enemies;
