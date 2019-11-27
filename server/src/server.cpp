@@ -55,7 +55,7 @@ void server::handle_receive(const boost::system::error_code& error,
 		else if (type == "movement") {
 			float x = root.get<float>("x", 0);
 			float y = root.get<float>("y", 0);
-			room_.updatePosition(boost::lexical_cast<std::string>(remote_endpoint_.port()) , { x, y });
+			room_.updatePosition(boost::lexical_cast<std::string>(remote_endpoint_.port()) , { x , y});
 		}
 
 		start_receive();

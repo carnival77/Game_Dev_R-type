@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Game.h"
 
+
 // float getDistance(sf::Vector2f fst, sf::Vector2f snd)
 // {
 //     const float x_diff = fst.x - snd.x;

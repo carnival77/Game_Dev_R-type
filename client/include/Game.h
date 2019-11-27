@@ -4,6 +4,7 @@
 #include "enemy.h"
 #include "missile.h"
 #include "background.h"
+#include <boost/asio.hpp>
 
 class Game
 {
