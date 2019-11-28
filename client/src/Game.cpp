@@ -11,7 +11,7 @@ using boost::asio::ip::udp;
 
 
 Game::Game(std::string hostname, unsigned short port)
-// : network(hostname, port)
+: network(hostname, port)
 {
     loadTextures();
     player.setAnimation(textures, 1);
@@ -20,36 +20,21 @@ Game::Game(std::string hostname, unsigned short port)
     //
 	// establish connection with server
     //
-	// network.write(std::string("HELLO\n"));
-    int max_length = 1024;
+	network.write("HELLO\n");
 
-    boost::asio::io_context io_context;
+    // std::cout << "Enter message: ";
+    // char request[max_length];
+    // std::cin.getline(request, max_length);
+    // size_t request_length = std::strlen(request);
+    // socket.send_to(boost::asio::buffer(request, request_length), remote_endpoint);
 
-    // FIXME: what does the endpoint represent here? Why we need a different port number from the server?
-    udp::socket socket(io_context, udp::endpoint(udp::v4(), port+1));
-
-    udp::resolver resolver(io_context);
-    // address type, hostname, service type (which port to bind to)
-    // we can either leave service empty and set port manually, or pass the port as a string
-    udp::resolver::results_type endpoints = resolver.resolve(udp::v4(), hostname, std::to_string(port));
-    udp::endpoint remote_endpoint = *endpoints.begin();
-
-    std::cout << "Enter message: ";
-    char request[max_length];
-    std::cin.getline(request, max_length);
-    size_t request_length = std::strlen(request);
-    socket.send_to(boost::asio::buffer(request, request_length), remote_endpoint);
-    // std::string payload;
-    // std::cin >> payload;
-    // socket.send_to(boost::asio::buffer(payload), remote_endpoint);
-
-    char reply[max_length];
-    udp::endpoint sender_endpoint;
-    size_t reply_length = socket.receive_from(
-        boost::asio::buffer(reply, max_length), sender_endpoint);
-    std::cout << "Reply is: ";
-    std::cout.write(reply, reply_length);
-    std::cout << "\n";    //
+    // char reply[max_length];
+    // udp::endpoint sender_endpoint;
+    // size_t reply_length = socket.receive_from(
+    //     boost::asio::buffer(reply, max_length), sender_endpoint);
+    // std::cout << "Reply is: ";
+    // std::cout.write(reply, reply_length);
+    // std::cout << "\n";    //
     //
 
 	// std::cout << network.read();

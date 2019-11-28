@@ -3,6 +3,8 @@
 #include <boost/asio.hpp>
 #include <boost/array.hpp>
 
+#define MAX_DATAGRAM_LENGTH 1024
+
 using boost::asio::ip::udp;
 
 
@@ -15,6 +17,7 @@ class Network {
     private:
         boost::asio::io_context _io_context;
         udp::socket _socket;
-        boost::array<char, 128> _recv_buf;
-        udp::endpoint _receiver_endpoint;
+        udp::endpoint _remote_endpoint;
+        int _max_length = MAX_DATAGRAM_LENGTH;
+        boost::array<char, MAX_DATAGRAM_LENGTH> _recv_buf;
 };

@@ -28,5 +28,5 @@ private:
 
     cTexture textures;
 
-    // Network network;
+    Network network;
 };
