@@ -3,6 +3,9 @@
 
 class cScreen
 {
-public :
-    virtual int run(sf::RenderWindow &app) = 0;
+public:
+    virtual void run() = 0;
+    virtual void processEvents() = 0;
+    virtual void update() = 0;
+    virtual void render() = 0;
 };
