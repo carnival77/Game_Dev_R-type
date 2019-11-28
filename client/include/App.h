@@ -14,7 +14,6 @@ struct AppData
 
 typedef std::shared_ptr<AppData> AppDataRef;
 
-
 class App
 {
 private:

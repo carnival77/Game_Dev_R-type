@@ -1,12 +1,14 @@
 #pragma once
-#include "loadTextures.h"
+#include "Entity.h"
 
-class Missile
+class Missile: public Entity
 {
+private:
+    void loadSprite();
 public:
-    sf::Vector2f pos;
-    sf::Sprite sprite;
-    Missile(int x, int y);
-    ~Missile();
-    bool moveMissile(sf::Vector2u winSize);
+    void update();
+    sf::Sprite& getSprite();
+    Missile(AppDataRef data,int x, int y);
+    bool isInside(sf::FloatRect rect);
+    ~Missile() {};
 };

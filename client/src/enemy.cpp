@@ -1,22 +1,31 @@
 #include "enemy.h"
-#include <iostream>
-Enemy::Enemy(int x, int y)
+
+Enemy::Enemy(AppDataRef data, int x, int y)
 {
-    animation = loadRedShip();
-    sprite = animation[0];
+    this->data = data;
+    loadSprite();
     sprite.setPosition(x,y); 
 }
 
-Enemy::~Enemy()
+void Enemy::update()
 {
+    sprite.move(sf::Vector2f(-ENEMY_SPEED,0));
 }
 
-void Enemy::enemyMove()
+sf::Sprite& Enemy::getSprite()
 {
-    static int state = 0;
-    state++;
-    //std::cout << state << "\n";
-    //sprite = animation[0];
-    //sprite.setPosition(pos);
-    sprite.move(sf::Vector2f(-5,0));
+    return sprite;
+}
+
+void Enemy::loadSprite()
+{
+    sprite.setTexture(data->textures.get("RedPlane"));
+    sf::Vector2u shapeSize = sprite.getTexture()->getSize();
+    shapeSize.x /= 16;
+    for (int i = 0; i < 4; i++)
+    {
+        animation.push_back(sf::IntRect(shapeSize.x * i, 6, shapeSize.x, shapeSize.y - 12));
+    }
+    sprite.setScale(3,3);
+    sprite.setTextureRect(animation[0]);
 }

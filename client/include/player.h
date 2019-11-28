@@ -1,16 +1,19 @@
 #pragma once
 #include <vector>
 #include "cTexture.h"
+#include "Entity.h"
+#include "missile.h"
 
-class Player
+class Player: public Entity
 {
 private:
-    std::vector<sf::Sprite> animation;
+    std::vector<sf::IntRect> animation;
+    void setAnimation(int color);
+
 public:
-    sf::Vector2f pos;
-    sf::Sprite sprite;
-    Player();
-    void setAnimation(cTexture &textures, int color);
-    ~Player();
-    bool movePlayer(float speed);
+    Player(AppDataRef data,int x, int y, int color);
+    ~Player(){};
+    void update();
+    sf::Sprite& getSprite();
+    Missile shoot();
 };

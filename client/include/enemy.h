@@ -1,18 +1,19 @@
 #pragma once
 #include "loadTextures.h"
+#include "Entity.h"
 #include <ctime>
 #include <cstdlib>
 
 
-class Enemy
+class Enemy: public Entity
 {
 private:
-    std::vector<sf::Sprite> animation;
+    std::vector<sf::IntRect> animation;
+    void loadSprite();
 public:
-    sf::Vector2f pos;
-    sf::Sprite sprite;
-    Enemy(int x, int y);
-    ~Enemy();
-    void enemyMove();
+    void update();
+    sf::Sprite& getSprite();
+    Enemy(AppDataRef data, int x, int y);
+    ~Enemy(){};
 };
 

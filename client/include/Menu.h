@@ -10,7 +10,7 @@ class Menu : public cScreen
 public:
     Menu(AppDataRef data);
     ~Menu();
-    virtual void run();
+    void run();
 private:
     void processEvents();
     void update();

@@ -19,8 +19,9 @@ private:
     void loadTextures();
 
     AppDataRef data;
-    Player player;
+    Player * player;
     vector<Enemy> enemies;
     vector<Missile> missiles;
+    sf::Clock clock;
     sf::Sprite background;
 };

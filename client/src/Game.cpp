@@ -4,8 +4,8 @@
 Game::Game(AppDataRef data): data(data)
 {
     loadTextures();
-    player.setAnimation(data->textures, 1);
     background.setTexture(data->textures.get("GameBackground"));
+    player = new Player(data, 0, 0, 4);
 }
 
 void Game::loadTextures()
@@ -47,37 +47,49 @@ void Game::processEvents()
 
 void Game::update()
 {
-    static int generator = 0;
-    static const int power = 40; 
-    generator++;
-    if(generator > power)//New Enemy
+    static float enemySpawn = clock.getElapsedTime().asSeconds();
+    static float playerShoot = clock.getElapsedTime().asSeconds();
+
+    //Move the player
+    player->update();
+
+    //New Enemy
+    if((clock.getElapsedTime().asSeconds() - enemySpawn) >= ENEMY_SPAWN)
     {
-        generator = 0;
-        Enemy enemy(sWidth, (rand() % (sHeight - 300) +100));
+        int border = 200;
+        enemySpawn = clock.getElapsedTime().asSeconds();
+        int enemyH = (rand() % (sHeight - border * 2) + border);
+        Enemy enemy(data, sWidth + 100, enemyH);
         enemies.push_back(enemy);
     }
 
     //Update enemies
     for (size_t i = 0; i < enemies.size(); i++)
     {
-        enemies[i].enemyMove();
-        if(enemies[i].sprite.getPosition().x < 0)
+        enemies[i].update();
+        if(enemies[i].getSprite().getPosition().x < 0)
         {
             enemies.erase(enemies.begin() + i);
             i--;
         }
     }
+
     //Player shooting mechanic
-    float speed = 7;
-    if(player.movePlayer(speed))
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
     {
-        Missile dummy(player.sprite.getPosition().x + 50 , player.sprite.getPosition().y + 40);
-        missiles.push_back(dummy);
+        if ((clock.getElapsedTime().asSeconds() - playerShoot) >= PLAYER_RELOAD)
+        {
+            missiles.push_back(player->shoot());      
+            playerShoot = clock.getElapsedTime().asSeconds();
+        }      
     }
+
     //Update missiles and check collisions
+    sf::FloatRect windowRect(0,0,data->window.getSize().x,data->window.getSize().y);
     for (size_t i = 0; i < missiles.size(); i++) //Move Missile
     {
-        if(!missiles[i].moveMissile(data->window.getSize()))
+        missiles[i].update();
+        if(!missiles[i].isInside(windowRect))
         {
             missiles.erase(missiles.begin() + i);
             i--;
@@ -85,7 +97,7 @@ void Game::update()
         }
         for (size_t j = 0; j < enemies.size(); j++)
         {
-            if(missiles[i].sprite.getGlobalBounds().intersects(enemies[j].sprite.getGlobalBounds()))
+            if(missiles[i].isInside(enemies[j].getSprite().getGlobalBounds()))
             {
                 missiles.erase(missiles.begin() + i);
                 enemies.erase(enemies.begin() + j);
@@ -95,10 +107,10 @@ void Game::update()
         }
     }
     //Check player collisions
-    sf::FloatRect playerBox = player.sprite.getGlobalBounds();
+    sf::FloatRect playerBox = player->getSprite().getGlobalBounds();
     for (size_t i = 0; i < enemies.size(); i++)
     {
-        if(playerBox.intersects(enemies[i].sprite.getGlobalBounds()))
+        if(playerBox.intersects(enemies[i].getSprite().getGlobalBounds()))
         {
             std::cout << "You are dead!!\n";
             data->window.close();
@@ -117,15 +129,15 @@ void Game::render()
     //Draw enemies
     for (size_t i = 0; i < enemies.size(); i++) 
     {
-        data->window.draw(enemies[i].sprite);
+        data->window.draw(enemies[i].getSprite());
     }
     //Draw missiles
     for (size_t i = 0; i < missiles.size(); i++)
     { 
-        data->window.draw(missiles[i].sprite);
+        data->window.draw(missiles[i].getSprite());
     }
     //Draw player
-    data->window.draw(player.sprite);
+    data->window.draw(player->getSprite());
     // sf::FloatRect dummy = player.sprite.getGlobalBounds();
     // sf::RectangleShape dummy2(sf::Vector2f(dummy.width, dummy.height));
     // dummy2.setOutlineThickness(2);

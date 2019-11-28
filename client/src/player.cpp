@@ -1,14 +1,16 @@
 #include "player.h"
 
 //Color: 0..3 (blue, red, yellow and green)
-Player::Player()
+Player::Player(AppDataRef data,int x, int y, int color)
 {
+    this->data = data;
+    sprite.setPosition(x, y);
+    setAnimation(color);
 }
 
-void Player::setAnimation(cTexture &textures, int color)
+void Player::setAnimation(int color)
 {
-    sf::Sprite sprite;
-    sprite.setTexture(textures.get("Players"));
+    sprite.setTexture(data->textures.get("Players"));
 
     sf::Vector2u shapeSize = sprite.getTexture()->getSize();
     shapeSize.x /= 5;
@@ -16,49 +18,38 @@ void Player::setAnimation(cTexture &textures, int color)
 
     for (int i = 0; i < 5; i++)
     {
-        sprite.setTextureRect(sf::IntRect(shapeSize.x * i, shapeSize.y * color, shapeSize.x, shapeSize.y-1));
-        sprite.setScale(sf::Vector2f(3,3));
-        animation.push_back(sprite);
+        animation.push_back(sf::IntRect(shapeSize.x * i, shapeSize.y * color, shapeSize.x, shapeSize.y));
     }
+    sprite.setTextureRect(animation[2]);
+    sprite.setScale(3,3);
 }
 
-
-Player::~Player()
+void Player::update()
 {
-    
-}
-
-bool Player::movePlayer(float speed)
-{
-    static int reload = 0;
-    reload++;
-    bool shoot = false;
-    sprite = animation[2];
-    sprite.setPosition(pos);
+    sprite.setTextureRect(animation[2]);
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)){
-        sprite = animation[2];
-        sprite.setPosition(pos);
-        sprite.move(sf::Vector2f(-speed,0.0));
+        sprite.move(sf::Vector2f(-PLAYER_SPEED,0.0));
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)){
-        sprite = animation[2];
-        sprite.setPosition(pos);
-        sprite.move(sf::Vector2f(speed,0.0));
+        sprite.move(sf::Vector2f(PLAYER_SPEED,0.0));
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)){
-        sprite = animation[4];
-        sprite.setPosition(pos);
-        sprite.move(sf::Vector2f(0.0,-speed));
+        sprite.setTextureRect(animation[4]);
+        sprite.move(sf::Vector2f(0.0,-PLAYER_SPEED));
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)){
-        sprite = animation[0];
-        sprite.setPosition(pos);
-        sprite.move(sf::Vector2f(0.0,speed));
+        sprite.setTextureRect(animation[0]);
+        sprite.move(sf::Vector2f(0.0,PLAYER_SPEED));
     }
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && reload > 30){
-        shoot = true;
-        reload = 0;
-    }
-    pos = sprite.getPosition();
-    return shoot;
+}
+
+sf::Sprite& Player::getSprite()
+{
+    return sprite;
+}
+
+Missile Player::shoot()
+{
+    Missile dummy(data, sprite.getPosition().x + sprite.getTextureRect().width, sprite.getPosition().y + sprite.getTextureRect().height/2);
+    return dummy;
 }
