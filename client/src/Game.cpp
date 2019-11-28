@@ -32,6 +32,7 @@ Game::Game(AppDataRef data,std::string hostname, unsigned short port)
     loadTextures();
     background.setTexture(data->textures.get("GameBackground"));
     player = new Player(data, 0, 0, 4);
+    starfield = new Starfield(data);
 }
 
 void Game::loadTextures()
@@ -39,7 +40,7 @@ void Game::loadTextures()
     data->textures.load("Players", "./textures/players.gif");
     data->textures.load("PlayerMissile", "./textures/playerMissiles.gif");
     data->textures.load("RedPlane", "./textures/redEnemyShip.gif");
-    data->textures.load("GameBackground", "./textures/background.jpg");
+    data->textures.load("GameBackground", "./textures/gameBackground.png");
 }
 
 
@@ -78,6 +79,8 @@ void Game::update()
 
     //Move the player
     player->update();
+    //Move the background
+    starfield->update();
 
     //New Enemy
     if((clock.getElapsedTime().asSeconds() - enemySpawn) >= ENEMY_SPAWN)
@@ -148,8 +151,8 @@ void Game::update()
 void Game::render()
 {
     data->window.clear();
-
-    data->window.draw(background);
+    starfield->draw();
+    //data->window.draw(background);
     
     //draw()
     //Draw enemies

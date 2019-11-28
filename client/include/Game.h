@@ -7,6 +7,7 @@
 #include "cTexture.h"
 #include "network.hpp"
 #include "App.h"
+#include "Starfield.h"
 
 class Game : public cScreen
 {
@@ -27,6 +28,7 @@ private:
     vector<Missile> missiles;
     sf::Clock clock;
     sf::Sprite background;
+    Starfield * starfield;
 
     Network network;
 };
