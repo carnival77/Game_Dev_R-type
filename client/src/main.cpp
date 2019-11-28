@@ -20,7 +20,7 @@ int main(int argc, char** argv)
 	//Screens preparations
     float height = app.getSize().y;
     float width = app.getSize().x;
-	Game game("127.0.0.1", 13);
+	Game game("127.0.0.1", 6666);
 	Screens.push_back(&game);
 	Menu menu(width, height);
 	Screens.push_back(&menu);
