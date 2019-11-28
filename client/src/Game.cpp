@@ -37,7 +37,8 @@ Game::Game(std::string hostname, unsigned short port)
     // std::cout << "\n";    //
     //
 
-	// std::cout << network.read();
+    size_t read_bytes = network.read();
+	std::cout << "Got: " << network.extract_payload(read_bytes) << " ( " << read_bytes << " bytes )\n";
 }
 
 void Game::loadTextures()

@@ -14,11 +14,24 @@ Network::Network(std::string hostname, unsigned short port)
 }
 
 
-void Network::read() {
-
+void Network::write(std::string data) {
+    _socket.send_to(boost::asio::buffer(data), _remote_endpoint);
 }
 
 
-void Network::write(std::string data) {
-    _socket.send_to(boost::asio::buffer(data), _remote_endpoint);
+size_t Network::read() {
+    // reads message from server
+    // placing contents in reply buffer
+    // and returning the number of bytes read
+    udp::endpoint sender_endpoint;
+    size_t reply_length = _socket.receive_from(
+        boost::asio::buffer(reply, _max_length), sender_endpoint);
+    return reply_length;
+}
+
+
+std::string Network::extract_payload(size_t reply_length) {
+    // returns only the message part of the buffer, as a string object
+    std::string data(reply);
+    return data.substr(0, reply_length);
 }
