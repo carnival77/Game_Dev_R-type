@@ -7,9 +7,6 @@
 static const int sWidth = 1280;
 static const int sHeight = 720;
 
-#define SERVER_IP //Add server ip
-#define SPLASH_TIME 1.0f
-
 #define PLAYER_SPEED 4.0f
 #define PLAYER_RELOAD 0.6f
 
