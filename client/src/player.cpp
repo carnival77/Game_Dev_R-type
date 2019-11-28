@@ -1,4 +1,5 @@
 #include "player.h"
+#include <iostream>
 
 //Color: 0..3 (blue, red, yellow and green)
 Player::Player()
@@ -36,6 +37,7 @@ bool Player::movePlayer(float speed)
     sprite = animation[2];
     sprite.setPosition(pos);
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)){
+        std::cout << "Left" << std::endl;
         sprite = animation[2];
         sprite.setPosition(pos);
         sprite.move(sf::Vector2f(-speed,0.0));

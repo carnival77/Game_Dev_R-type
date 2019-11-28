@@ -6,11 +6,12 @@
 #include "background.h"
 #include "cScreen.h"
 #include "cTexture.h"
+#include "network.hpp"
 
 class Game : public cScreen
 {
 public:
-    Game();
+    Game(std::string hostname, unsigned short port);
     virtual int run(sf::RenderWindow &window);
 
 private:
@@ -26,4 +27,6 @@ private:
     sf::Sprite background;
 
     cTexture textures;
+
+    // Network network;
 };
