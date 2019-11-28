@@ -3,12 +3,15 @@
 #include "player.h"
 #include "enemy.h"
 #include "missile.h"
+#include "cScreen.h"
+#include "cTexture.h"
+#include "network.hpp"
 #include "App.h"
 
 class Game : public cScreen
 {
 public:
-    Game(AppDataRef data);
+    Game(AppDataRef data, std::string hostname, unsigned short port);
     ~Game(){};
     void run();
 
@@ -24,4 +27,6 @@ private:
     vector<Missile> missiles;
     sf::Clock clock;
     sf::Sprite background;
+
+    Network network;
 };

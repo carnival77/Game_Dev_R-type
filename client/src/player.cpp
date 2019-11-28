@@ -1,4 +1,5 @@
 #include "player.h"
+#include <iostream>
 
 //Color: 0..3 (blue, red, yellow and green)
 Player::Player(AppDataRef data,int x, int y, int color)

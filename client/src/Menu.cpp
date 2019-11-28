@@ -1,4 +1,6 @@
 #include "Menu.h"
+#include "constants.h"
+
 
 Menu::Menu(AppDataRef data) : data(data)
 {
@@ -58,7 +60,7 @@ void Menu::processEvents()
                 switch (selectedItemIndex)
                 {
                 case 0:
-                    data->manager.changeScreen(ScreenState(new Game(data)));
+                    data->manager.changeScreen(ScreenState(new Game(data, server_hostname, server_port)));
                     break;
                 case 1: 
                     data->window.close();

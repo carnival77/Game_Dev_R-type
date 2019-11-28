@@ -1,8 +1,30 @@
 #include "Game.h"
 #include <iostream>
+#include <string>
 
-Game::Game(AppDataRef data): data(data)
+
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <boost/asio.hpp>
+using boost::asio::ip::udp;
+
+
+Game::Game(AppDataRef data,std::string hostname, unsigned short port)
+: network(hostname, port)
 {
+    this->data = data;
+    loadTextures();
+
+    //
+	// establish connection with server
+    //
+	network.write("HELLO");
+    if (network.extract_payload(network.read()) != "OK") {
+        std::cerr << "Could not connect to server.\n";
+    } else {
+        std::cout << "Connected to server.\n";
+    }
     loadTextures();
     background.setTexture(data->textures.get("GameBackground"));
     player = new Player(data, 0, 0, 4);
