@@ -3,13 +3,6 @@
 #include <string>
 
 
-#include <cstdlib>
-#include <cstring>
-#include <iostream>
-#include <boost/asio.hpp>
-using boost::asio::ip::udp;
-
-
 Game::Game(AppDataRef data,std::string hostname, unsigned short port)
 : network(hostname, port)
 {
@@ -19,7 +12,8 @@ Game::Game(AppDataRef data,std::string hostname, unsigned short port)
     //
 	// establish connection with server
     //
-	network.write("HELLO");
+    char payload[] = "HELLO";
+	network.write(payload, strlen(payload));
     if (network.extract_payload(network.read()) != "OK") {
         std::cerr << "Could not connect to server.\n";
     } else {
@@ -69,6 +63,7 @@ void Game::processEvents()
 
 void Game::update()
 {
+    // network.write(player.gameinfo);
     static int generator = 0;
     static const int power = 40; 
     generator++;

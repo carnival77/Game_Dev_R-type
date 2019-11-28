@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
 #include "cTexture.h"
+#include "data.hpp"
+
 
 class Player
 {
@@ -9,6 +11,7 @@ private:
 public:
     sf::Vector2f pos;
     sf::Sprite sprite;
+    GameInfo gameinfo;
     Player();
     void setAnimation(cTexture &textures, int color);
     ~Player();

@@ -36,12 +36,13 @@ bool Player::movePlayer(float speed)
     bool shoot = false;
     sprite = animation[2];
     sprite.setPosition(pos);
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)){
-        std::cout << "Left" << std::endl;
+    gameinfo.keypresses.isLeftKeyPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left);
+    if(gameinfo.keypresses.isLeftKeyPressed){
         sprite = animation[2];
         sprite.setPosition(pos);
         sprite.move(sf::Vector2f(-speed,0.0));
     }
+
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)){
         sprite = animation[2];
         sprite.setPosition(pos);

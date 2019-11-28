@@ -28,7 +28,8 @@ void Server::handle_receive(const boost::system::error_code& error,
                             std::size_t bytes_transferred) {
     // we can use instance variables in this handler because "this" was bound to it
     // write up to the length (else we read garbage)
-    std::cout << "[MESSAGE LOG] Received: " << extract_payload(bytes_transferred) << "\n";
+    std::cout << "[MESSAGE LOG] Received: " << extract_payload(bytes_transferred) 
+              << " (" << bytes_transferred << " bytes) " << "\n";
 
     if (error) {
         std::cerr << "( " << error << " )" << error.message() << std::endl;
