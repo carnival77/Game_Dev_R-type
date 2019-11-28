@@ -18,8 +18,14 @@ int main(int argc, char** argv)
         boost::asio::io_context io_context;
 
         udp::resolver resolver(io_context);
+        //  to find the correct remote endpoint to use 
+        //  based on the host and service names
         udp::endpoint receiver_endpoint =
         *resolver.resolve(udp::v4(), argv[1], "daytime").begin();
+        // The query is restricted to return only IPv4 endpoints 
+        // by the boost::asio::ip::udp::v4() argument.
+        // resolve() function is guaranteed to return 
+        // at least one endpoint in the list if it does not fail
 
         udp::socket socket(io_context);
         socket.open(udp::v4());

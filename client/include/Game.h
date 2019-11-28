@@ -5,7 +5,9 @@
 #include "missile.h"
 #include "background.h"
 #include <boost/asio.hpp>
+#include <boost/array.hpp>
 #include "cScreen.h"
+using boost::asio::ip::udp;
 
 class Game : public cScreen
 {

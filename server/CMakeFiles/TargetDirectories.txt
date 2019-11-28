@@ -1,0 +1,3 @@
+/home/Evan/Desktop/test/CPP_rtype_2019/server/CMakeFiles/rebuild_cache.dir
+/home/Evan/Desktop/test/CPP_rtype_2019/server/CMakeFiles/r-type_server.dir
+/home/Evan/Desktop/test/CPP_rtype_2019/server/CMakeFiles/edit_cache.dir
