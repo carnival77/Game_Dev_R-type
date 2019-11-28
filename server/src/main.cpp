@@ -1,13 +1,8 @@
-#include <ctime>
 #include <iostream>
-#include <string>
-#include <boost/array.hpp>
-#include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/asio.hpp>
+#include "server.hpp"
 
-using boost::asio::ip::udp;
 
+<<<<<<< HEAD
 
 class udp_server
 {
@@ -71,11 +66,20 @@ private:
 
 int main()
 {
+=======
+int main(int argc, char* argv[]) {
+>>>>>>> 98caf0a4099d35e9b9a8ebb4170077bdd9a17e27
     std::cout << "I'm the server\n";
     try {
-      boost::asio::io_context io_context;
-      udp_server server(io_context);
-      io_context.run();
+      if (argc != 3) {
+        std::cerr << "Usage: server <host> <port>\n";
+        return 84;
+      }
+      std::string hostname = argv[1];
+      unsigned short port = std::stoi(argv[2]);
+
+      Server server(hostname, port);
+      std::cout << "Listening on port " << port << " host " << hostname << "\n";
     } catch (std::exception& e) {
       std::cerr << e.what() << std::endl;
     }

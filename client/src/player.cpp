@@ -1,11 +1,28 @@
 #include "player.h"
-#include "loadTextures.h"
+#include <iostream>
 
-
+//Color: 0..3 (blue, red, yellow and green)
 Player::Player()
 {
-    this->animation = loadPlayerShip();
 }
+
+void Player::setAnimation(cTexture &textures, int color)
+{
+    sf::Sprite sprite;
+    sprite.setTexture(textures.get(Textures::Players));
+
+    sf::Vector2u shapeSize = sprite.getTexture()->getSize();
+    shapeSize.x /= 5;
+    shapeSize.y /= 5;
+
+    for (int i = 0; i < 5; i++)
+    {
+        sprite.setTextureRect(sf::IntRect(shapeSize.x * i, shapeSize.y * color, shapeSize.x, shapeSize.y));
+        sprite.setScale(sf::Vector2f(3,3));
+        animation.push_back(sprite);
+    }
+}
+
 
 Player::~Player()
 {
@@ -20,6 +37,7 @@ bool Player::movePlayer(float speed)
     sprite = animation[2];
     sprite.setPosition(pos);
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)){
+        std::cout << "Left" << std::endl;
         sprite = animation[2];
         sprite.setPosition(pos);
         sprite.move(sf::Vector2f(-speed,0.0));
@@ -39,7 +57,7 @@ bool Player::movePlayer(float speed)
         sprite.setPosition(pos);
         sprite.move(sf::Vector2f(0.0,speed));
     }
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && reload > 75){
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && reload > 30){
         shoot = true;
         reload = 0;
     }
