@@ -1,13 +1,13 @@
 #include "cTexture.h"
 
-void cTexture::load(Textures::ID id, const std::string &filename)
+void cTexture::load(const std::string & id, const std::string &filename)
 {
     sf::Texture texture;
     texture.loadFromFile(filename);
     textureMap[id] = texture;
 }
 
-sf::Texture& cTexture::get(Textures::ID id) 
+sf::Texture& cTexture::get(const std::string &id) 
 {
     return textureMap.at(id);
 }

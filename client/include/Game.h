@@ -3,30 +3,29 @@
 #include "player.h"
 #include "enemy.h"
 #include "missile.h"
-#include "background.h"
 #include "cScreen.h"
 #include "cTexture.h"
 #include "network.hpp"
+#include "App.h"
 
 class Game : public cScreen
 {
 public:
-    Game(std::string hostname, unsigned short port);
-    virtual int run(sf::RenderWindow &window);
+    Game(AppDataRef data, std::string hostname, unsigned short port);
+    ~Game(){};
+    void run();
 
 private:
-    int processEvents(sf::RenderWindow &window);
-    int update(sf::RenderWindow &window);
-    void render(sf::RenderWindow &window);
+    void processEvents();
+    void update();
+    void render();
     void loadTextures();
 
+    AppDataRef data;
     Player player;
-    //Background background;
     vector<Enemy> enemies;
     vector<Missile> missiles;
     sf::Sprite background;
-
-    cTexture textures;
 
     Network network;
 };

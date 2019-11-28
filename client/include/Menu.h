@@ -1,23 +1,26 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "cScreen.h"
+#include "Screens.h"
+#include "App.h"
 
 #define ITEMS 2
 
 class Menu : public cScreen
 {
 public:
-    Menu(float width, float height);
+    Menu(AppDataRef data);
     ~Menu();
-    virtual int run(sf::RenderWindow &window);
+    virtual void run();
 private:
-    int processEvents(sf::RenderWindow &window);
-    void update(sf::RenderWindow &window);
-    void render(sf::RenderWindow &window);
+    void processEvents();
+    void update();
+    void render();
 
     sf::Font font;
     sf::Text menu[ITEMS];
     int selectedItemIndex;
+    AppDataRef data;
+    sf::Sprite background;
 
     void moveUp();
     void moveDown();

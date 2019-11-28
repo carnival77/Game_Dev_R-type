@@ -1,21 +1,28 @@
 #include "Menu.h"
+#include "constants.h"
 
-Menu::Menu(float width, float height)
+
+Menu::Menu(AppDataRef data) : data(data)
 {
-    if (!font.loadFromFile("./fonts/arial.ttf"))
+    if (!font.loadFromFile("./fonts/Big Space.otf"))
     {
         return;
     }
+    data->textures.load("Menu background", "./textures/menuBackground.jpg");
+    background.setTexture(data->textures.get("Menu background"));
     selectedItemIndex = 0;
     menu[0].setFont(font);
     menu[0].setFillColor(sf::Color::Magenta);
     menu[0].setString("Play");
-    menu[0].setPosition(sf::Vector2f(width / 2, height / (ITEMS + 1) * 1));
+    menu[0].setPosition(sf::Vector2f(sWidth / 2, sHeight / (ITEMS + 1) * 1));
+    menu[0].setScale(3,3);
 
     menu[1].setFont(font);
     menu[1].setFillColor(sf::Color::White);
     menu[1].setString("Exit");
-    menu[1].setPosition(sf::Vector2f(width / 2, height / (ITEMS + 1) * 2));
+    menu[1].setPosition(sf::Vector2f(sWidth / 2, sHeight / (ITEMS + 1) * 2));
+    menu[1].setScale(3,3);
+
 }
 
 Menu::~Menu()
@@ -23,23 +30,22 @@ Menu::~Menu()
 
 }
 
-int Menu::run(sf::RenderWindow &window)
+void Menu::run()
 {
-    int state = processEvents(window);
-    update(window);
-    render(window);
-    return state;
+    processEvents();
+    update();
+    render();
 }
 
-int Menu::processEvents(sf::RenderWindow &window)
+void Menu::processEvents()
 {
     sf::Event event;
-    while (window.pollEvent(event))
+    while (data->window.pollEvent(event))
     {
         switch (event.type)
         {
         case sf::Event::Closed:
-            return -1;
+            data->window.close();
             break;
         case sf::Event::KeyPressed:
             switch (event.key.code)
@@ -54,31 +60,31 @@ int Menu::processEvents(sf::RenderWindow &window)
                 switch (selectedItemIndex)
                 {
                 case 0:
-                    return 0;
+                    data->manager.changeScreen(ScreenState(new Game(data, server_hostname, server_port)));
                     break;
                 case 1: 
-                    return -1;
+                    data->window.close();
                     break;
                 }
             }
         }
     }
-    return 1;
 }
 
-void Menu::update(sf::RenderWindow &window)
+void Menu::update()
 {
 
 }
 
-void Menu::render(sf::RenderWindow &window)
+void Menu::render()
 {
-    window.clear();
+    data->window.clear();
+    data->window.draw(background);
     for (int i = 0; i < ITEMS; i++)
     {
-        window.draw(menu[i]);
+        data->window.draw(menu[i]);
     }
-    window.display();
+    data->window.display();
 }
 
 void Menu::moveUp()

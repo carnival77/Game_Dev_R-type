@@ -9,7 +9,7 @@ Player::Player()
 void Player::setAnimation(cTexture &textures, int color)
 {
     sf::Sprite sprite;
-    sprite.setTexture(textures.get(Textures::Players));
+    sprite.setTexture(textures.get("Players"));
 
     sf::Vector2u shapeSize = sprite.getTexture()->getSize();
     shapeSize.x /= 5;
@@ -17,7 +17,7 @@ void Player::setAnimation(cTexture &textures, int color)
 
     for (int i = 0; i < 5; i++)
     {
-        sprite.setTextureRect(sf::IntRect(shapeSize.x * i, shapeSize.y * color, shapeSize.x, shapeSize.y));
+        sprite.setTextureRect(sf::IntRect(shapeSize.x * i, shapeSize.y * color, shapeSize.x, shapeSize.y-1));
         sprite.setScale(sf::Vector2f(3,3));
         animation.push_back(sprite);
     }
