@@ -22,5 +22,4 @@ class Network {
         udp::endpoint _remote_endpoint;
         int _max_length = MAX_DATAGRAM_LENGTH;
         boost::array<char, MAX_DATAGRAM_LENGTH> _recv_buf;
-        
 };

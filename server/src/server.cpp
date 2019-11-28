@@ -28,20 +28,19 @@ void Server::handle_receive(const boost::system::error_code& error,
                             std::size_t bytes_transferred) {
     // we can use instance variables in this handler because "this" was bound to it
     // write up to the length (else we read garbage)
-    std::cout << "Received: ";
-    std::cout.write(_recv_buffer.data(), bytes_transferred);
-    std::cout << "\n"; 
+    std::cout << "[MESSAGE LOG] Received: " << extract_payload(bytes_transferred) << "\n";
 
     if (error) {
         std::cerr << "( " << error << " )" << error.message() << std::endl;
     } else {
         boost::shared_ptr<std::string> message(
-            new std::string("hello from server\n"));
+            new std::string("OK"));
 
         _socket.async_send_to(boost::asio::buffer(*message), _remote_endpoint,
             boost::bind(&Server::handle_send, this, message,
                 boost::asio::placeholders::error,
                 boost::asio::placeholders::bytes_transferred));
+        std::cout << "[MESSAGE LOG] Sent: " << *message << "\n";
 
         start_receive();
     }
@@ -51,4 +50,10 @@ void Server::handle_receive(const boost::system::error_code& error,
 void Server::handle_send(boost::shared_ptr<std::string> /*message*/,
     const boost::system::error_code& /*error*/,
     std::size_t /*bytes_transferred*/) {
+}
+
+
+std::string Server::extract_payload(size_t bytes_transferred) {
+    std::string data(_recv_buffer.data());
+    return data.substr(0, bytes_transferred);
 }

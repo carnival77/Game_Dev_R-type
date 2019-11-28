@@ -20,25 +20,12 @@ Game::Game(std::string hostname, unsigned short port)
     //
 	// establish connection with server
     //
-	network.write("HELLO\n");
-
-    // std::cout << "Enter message: ";
-    // char request[max_length];
-    // std::cin.getline(request, max_length);
-    // size_t request_length = std::strlen(request);
-    // socket.send_to(boost::asio::buffer(request, request_length), remote_endpoint);
-
-    // char reply[max_length];
-    // udp::endpoint sender_endpoint;
-    // size_t reply_length = socket.receive_from(
-    //     boost::asio::buffer(reply, max_length), sender_endpoint);
-    // std::cout << "Reply is: ";
-    // std::cout.write(reply, reply_length);
-    // std::cout << "\n";    //
-    //
-
-    size_t read_bytes = network.read();
-	std::cout << "Got: " << network.extract_payload(read_bytes) << " ( " << read_bytes << " bytes )\n";
+	network.write("HELLO");
+    if (network.extract_payload(network.read()) != "OK") {
+        std::cerr << "Could not connect to server.\n";
+    } else {
+        std::cout << "Connected to server.\n";
+    }
 }
 
 void Game::loadTextures()
