@@ -5,8 +5,8 @@
 App::App(int width, int height, std::string title)
 {
     data->window.create(sf::VideoMode(width, height), title, sf::Style::Close | sf::Style::Titlebar);
-    // data->manager.changeScreen(ScreenState(new Game(data, server_hostname, server_port)));
-    data->manager.changeScreen(ScreenState(new Splash(data)));
+    data->manager.changeScreen(ScreenState(new Game(data, server_hostname, server_port)));
+    // data->manager.changeScreen(ScreenState(new Splash(data)));
     data->window.setFramerateLimit(60);
     this->init();
 }

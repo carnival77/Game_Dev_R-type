@@ -1,6 +1,13 @@
 #include <iostream>
 #include <string>
+#include <vector>
+#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/algorithm/string/split.hpp>
 #include "server.hpp"
+
+
+#define PLAYER_SPEED 4.0f
 
 
 Server::Server(std::string hostname, unsigned short port)
@@ -34,14 +41,35 @@ void Server::handle_receive(const boost::system::error_code& error,
     if (error) {
         std::cerr << "( " << error << " )" << error.message() << std::endl;
     } else {
-        boost::shared_ptr<std::string> message(
-            new std::string("OK"));
+        std::string message = extract_payload(bytes_transferred);
+        if (message == "HELLO") {
+            boost::shared_ptr<std::string> response(new std::string("OK"));
 
-        _socket.async_send_to(boost::asio::buffer(*message), _remote_endpoint,
-            boost::bind(&Server::handle_send, this, message,
-                boost::asio::placeholders::error,
-                boost::asio::placeholders::bytes_transferred));
-        std::cout << "[MESSAGE LOG] Sent: " << *message << "\n";
+            _socket.async_send_to(boost::asio::buffer(*response), _remote_endpoint,
+                boost::bind(&Server::handle_send, this, response,
+                    boost::asio::placeholders::error,
+                    boost::asio::placeholders::bytes_transferred));
+            std::cout << "[MESSAGE LOG] Sent: " << *response << "\n";
+        } else if (boost::starts_with(message, "KEY")){
+            std::vector<std::string> split_vect;
+            boost::split(split_vect, message, boost::is_any_of(":"));
+            for (auto e = split_vect.begin(); e != split_vect.end(); e++) {
+                std::cout << *e << " ";
+            }
+            std::cout << "\n";
+            std::string key_value = split_vect[1];
+            if (key_value == "LEFT") {
+                _game_state.player.x = _game_state.player.x - PLAYER_SPEED;
+                boost::shared_ptr<std::string> response(
+                    new std::string("PLAYER:" + std::to_string(_game_state.player.x)
+                                    + ";" + std::to_string(_game_state.player.y)));
+                _socket.async_send_to(boost::asio::buffer(*response), _remote_endpoint,
+                boost::bind(&Server::handle_send, this, response,
+                    boost::asio::placeholders::error,
+                    boost::asio::placeholders::bytes_transferred));
+                std::cout << "[MESSAGE LOG] Sent: " << *response << "\n";
+            }
+        }
 
         start_receive();
     }

@@ -102,7 +102,7 @@ void Game::update()
     //Player shooting mechanic
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
     {
-        network.write("KEY: SPACE");
+        network.write("KEY:SPACE");
         if ((clock.getElapsedTime().asSeconds() - playerShoot) >= PLAYER_RELOAD)
         {
             missiles.push_back(player->shoot());      
