@@ -37,7 +37,7 @@ bool Player::movePlayer(float speed)
     sprite = animation[2];
     sprite.setPosition(pos);
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)){
-        network -> write("KEY: LEFT", 9);
+        network -> write("KEY: LEFT");
         sprite = animation[2];
         sprite.setPosition(pos);
         sprite.move(sf::Vector2f(-speed,0.0));

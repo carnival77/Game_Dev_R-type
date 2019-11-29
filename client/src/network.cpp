@@ -14,23 +14,13 @@ Network::Network(std::string hostname, unsigned short port)
 }
 
 
-void Network::write(const char data[], size_t length) {
+void Network::write(std::string data) {
     /**
      * Send data to the server.
     **/
-    _socket.send_to(boost::asio::buffer(data, length), _remote_endpoint);
+    _socket.send_to(boost::asio::buffer(data), _remote_endpoint);
     std::cout << "[NETWORK LOG] Wrote: " << data << "\n";
 }
-
-
-// void Network::write(GameInfo data) {
-//     /**
-//      * Send data to the server.
-//     **/
-//     GameInfo pod_array[] = { data };
-//     _socket.send_to(boost::asio::buffer(pod_array, max_length), _remote_endpoint);
-//     // std::cout << "[NETWORK LOG] Wrote: " << data << "\n";
-// }
 
 
 size_t Network::read() {

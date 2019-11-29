@@ -2,7 +2,6 @@
 #include <string>
 #include <boost/asio.hpp>
 #include <boost/array.hpp>
-#include "data.hpp"
 
 #define MAX_DATAGRAM_LENGTH 1024
 
@@ -12,7 +11,7 @@ using boost::asio::ip::udp;
 class Network {
     public:
         Network(std::string hostname, unsigned short port);
-        void write(const char data[], size_t length);
+        void write(std::string);
         size_t read();
         std::string extract_payload(size_t reply_length);
 
