@@ -11,7 +11,6 @@ private:
 public:
     sf::Vector2f pos;
     sf::Sprite sprite;
-    // GameInfo gameinfo;
     Network * network;
     Player();
     void setAnimation(cTexture &textures, int color);

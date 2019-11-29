@@ -44,21 +44,26 @@ bool Player::movePlayer(float speed)
     }
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)){
+        network -> write("KEY: RIGHT");
         sprite = animation[2];
         sprite.setPosition(pos);
         sprite.move(sf::Vector2f(speed,0.0));
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)){
+        network -> write("KEY: UP");
         sprite = animation[4];
         sprite.setPosition(pos);
         sprite.move(sf::Vector2f(0.0,-speed));
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)){
+        network -> write("KEY: DOWN");
         sprite = animation[0];
         sprite.setPosition(pos);
         sprite.move(sf::Vector2f(0.0,speed));
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && reload > 30){
+        // TODO: reload validation on the server-side (to avoid cheating on the client-side)
+        network -> write("KEY: SPACE");
         shoot = true;
         reload = 0;
     }
