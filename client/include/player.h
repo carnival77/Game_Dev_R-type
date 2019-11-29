@@ -2,6 +2,7 @@
 #include <vector>
 #include "cTexture.h"
 #include "data.hpp"
+#include "network.hpp"
 
 
 class Player
@@ -11,7 +12,8 @@ private:
 public:
     sf::Vector2f pos;
     sf::Sprite sprite;
-    GameInfo gameinfo;
+    // GameInfo gameinfo;
+    Network * network;
     Player();
     void setAnimation(cTexture &textures, int color);
     ~Player();

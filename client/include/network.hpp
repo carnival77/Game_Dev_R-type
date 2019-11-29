@@ -12,7 +12,7 @@ using boost::asio::ip::udp;
 class Network {
     public:
         Network(std::string hostname, unsigned short port);
-        void write(char data[], size_t length);
+        void write(const char data[], size_t length);
         size_t read();
         std::string extract_payload(size_t reply_length);
 

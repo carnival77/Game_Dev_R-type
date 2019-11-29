@@ -19,6 +19,25 @@ Game::Game(AppDataRef data,std::string hostname, unsigned short port)
     } else {
         std::cout << "Connected to server.\n";
     }
+
+    player.network = &network;
+
+    // std::string serial_str;
+    // boost::iostreams::back_insert_device<std::string> inserter(serial_str);
+    // boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
+    // boost::archive::binary_oarchive oa(s);
+    // oa << player.gameinfo;
+    // s.flush();
+    // int len = serial_str.length();
+    // char gameinfo_payload[len+1];
+    // std::strcpy(gameinfo_payload, serial_str.c_str());
+
+    // std::stringstream ss;
+    // boost::archive::binary_oarchive oa(ss);
+    // oa << player.gameinfo;
+    // const char* gameinfo_payload = ss.str().data();
+    // network.write(gameinfo_payload, ss.str().size());
+
     loadTextures();
     player.setAnimation(data->textures, 1);
     background.setTexture(data->textures.get("GameBackground"));
@@ -63,7 +82,6 @@ void Game::processEvents()
 
 void Game::update()
 {
-    // network.write(player.gameinfo);
     static int generator = 0;
     static const int power = 40; 
     generator++;

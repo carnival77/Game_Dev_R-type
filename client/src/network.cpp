@@ -14,7 +14,7 @@ Network::Network(std::string hostname, unsigned short port)
 }
 
 
-void Network::write(char data[], size_t length) {
+void Network::write(const char data[], size_t length) {
     /**
      * Send data to the server.
     **/
