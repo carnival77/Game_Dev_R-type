@@ -29,7 +29,7 @@ size_t Network::read() {
      * Returns number of bytes read.
     **/
     size_t reply_length = _socket.receive_from(
-        boost::asio::buffer(reply, _max_length), _remote_endpoint);
+        boost::asio::buffer(reply, max_length), _remote_endpoint);
 	std::cout << "[NETWORK LOG] Got: " << extract_payload(reply_length) << " ( " << reply_length << " bytes )\n";
     return reply_length;
 }

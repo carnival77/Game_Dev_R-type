@@ -3,13 +3,7 @@
 #include <string>
 
 
-#include <cstdlib>
-#include <cstring>
-#include <iostream>
-#include <boost/asio.hpp>
-
-//#define SERVER
-using boost::asio::ip::udp;
+#define SERVER
 
 
 Game::Game(AppDataRef data,std::string hostname, unsigned short port)
@@ -29,9 +23,11 @@ Game::Game(AppDataRef data,std::string hostname, unsigned short port)
         std::cout << "Connected to server.\n";
     }
     #endif
+
     loadTextures();
     background.setTexture(data->textures.get("GameBackground"));
     player = new Player(data, 0, 0, 4);
+    player -> network = &network;
     starfield = new Starfield(data);
 }
 
@@ -106,6 +102,7 @@ void Game::update()
     //Player shooting mechanic
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
     {
+        network.write("KEY: SPACE");
         if ((clock.getElapsedTime().asSeconds() - playerShoot) >= PLAYER_RELOAD)
         {
             missiles.push_back(player->shoot());      

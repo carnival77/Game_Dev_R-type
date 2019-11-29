@@ -3,6 +3,8 @@
 #include "cTexture.h"
 #include "Entity.h"
 #include "missile.h"
+#include "network.hpp"
+
 
 class Player: public Entity
 {
@@ -16,4 +18,5 @@ public:
     void update();
     sf::Sprite& getSprite();
     Missile shoot();
+    Network * network;
 };

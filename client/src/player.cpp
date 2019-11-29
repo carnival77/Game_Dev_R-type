@@ -29,16 +29,21 @@ void Player::update()
 {
     sprite.setTextureRect(animation[2]);
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)){
+        network -> write("KEY: LEFT");
         sprite.move(sf::Vector2f(-PLAYER_SPEED,0.0));
     }
+
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)){
+        network -> write("KEY: RIGHT");
         sprite.move(sf::Vector2f(PLAYER_SPEED,0.0));
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)){
+        network -> write("KEY: UP");
         sprite.setTextureRect(animation[4]);
         sprite.move(sf::Vector2f(0.0,-PLAYER_SPEED));
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)){
+        network -> write("KEY: DOWN");
         sprite.setTextureRect(animation[0]);
         sprite.move(sf::Vector2f(0.0,PLAYER_SPEED));
     }
