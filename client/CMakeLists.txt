@@ -8,5 +8,4 @@ file(GLOB INCLUDES "include/*.h")
 
 add_executable(r-type_client ${SOURCES} ${INCLUDES})
 
-target_link_libraries (r-type_client Threads::Threads sfml-window sfml-system sfml-audio sfml-graphics)
-
+target_link_libraries (r-type_client rtype_common Threads::Threads sfml-window sfml-system sfml-audio sfml-graphics)
