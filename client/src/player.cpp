@@ -1,8 +1,10 @@
 #include "player.h"
+
 #include <iostream>
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/split.hpp>
+#include "rtype_common/parsing.hpp"
 
 
 //Color: 0..3 (blue, red, yellow and green)
@@ -36,19 +38,8 @@ void Player::update()
         network -> write("KEY:LEFT");
         
         std::string reply = network -> extract_payload(network -> read());
-        std::vector<std::string> split_vect;
-        boost::split(split_vect, reply, boost::is_any_of(":"));
-        for (auto e = split_vect.begin(); e != split_vect.end(); e++) {
-            std::cout << *e << " ";
-        }
-        std::cout << "\n";
-
-        // std::vector<std::string> split_vect2;
-        boost::split(split_vect, split_vect[1], boost::is_any_of(";"));
-        for (auto e = split_vect.begin(); e != split_vect.end(); e++) {
-            std::cout << *e << " ";
-        }
-        std::cout << "\n";
+        std::vector<std::string> split_vect = rtype_common::split(reply, ":");
+        split_vect = rtype_common::split(split_vect[1], ";");
 
         float x = std::stof(split_vect[0]);
         float y = std::stof(split_vect[1]);

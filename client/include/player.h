@@ -4,7 +4,6 @@
 #include "Entity.h"
 #include "missile.h"
 #include "network.hpp"
-#include "rtype_common/sublib1.h"
 
 
 class Player: public Entity

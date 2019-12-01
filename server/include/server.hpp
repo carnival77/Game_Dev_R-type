@@ -16,7 +16,10 @@ class Server {
         void start_receive();
         void handle_receive(const boost::system::error_code& error,
                             std::size_t bytes_transferred);
-        void handle_send(boost::shared_ptr<std::string> /*message*/,
+        void async_send_only(std::string message);
+        void handle_send_empty(
+            // boost::shared_ptr<std::string> /*message*/,
+            std::string,
             const boost::system::error_code& /*error*/,
             std::size_t /*bytes_transferred*/);
         std::string extract_payload(size_t bytes_transferred);

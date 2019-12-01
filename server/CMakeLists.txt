@@ -8,4 +8,4 @@ file(GLOB INCLUDES "include/*.h")
 
 add_executable(r-type_server ${SOURCES} ${INCLUDES})
 
-target_link_libraries (r-type_server Threads::Threads) 
+target_link_libraries (r-type_server rtype_common Threads::Threads) 

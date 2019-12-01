@@ -1,10 +1,8 @@
+#include "server.hpp"
 #include <iostream>
 #include <string>
 #include <vector>
-#include <boost/algorithm/string.hpp>
-#include <boost/algorithm/string/predicate.hpp>
-#include <boost/algorithm/string/split.hpp>
-#include "server.hpp"
+#include "rtype_common/parsing.hpp"
 
 
 #define PLAYER_SPEED 4.0f
@@ -28,6 +26,7 @@ void Server::start_receive() {
             boost::asio::placeholders::error,
             boost::asio::placeholders::bytes_transferred)
     );
+    std::cout << "[NETWORK LOG] Queued async receive.\n";
 }
 
 
@@ -35,7 +34,7 @@ void Server::handle_receive(const boost::system::error_code& error,
                             std::size_t bytes_transferred) {
     // we can use instance variables in this handler because "this" was bound to it
     // write up to the length (else we read garbage)
-    std::cout << "[MESSAGE LOG] Received: " << extract_payload(bytes_transferred) 
+    std::cout << "[NETWORK LOG] Received: " << extract_payload(bytes_transferred) 
               << " (" << bytes_transferred << " bytes) " << "\n";
 
     if (error) {
@@ -43,31 +42,15 @@ void Server::handle_receive(const boost::system::error_code& error,
     } else {
         std::string message = extract_payload(bytes_transferred);
         if (message == "HELLO") {
-            boost::shared_ptr<std::string> response(new std::string("OK"));
-
-            _socket.async_send_to(boost::asio::buffer(*response), _remote_endpoint,
-                boost::bind(&Server::handle_send, this, response,
-                    boost::asio::placeholders::error,
-                    boost::asio::placeholders::bytes_transferred));
-            std::cout << "[MESSAGE LOG] Sent: " << *response << "\n";
-        } else if (boost::starts_with(message, "KEY")){
-            std::vector<std::string> split_vect;
-            boost::split(split_vect, message, boost::is_any_of(":"));
-            for (auto e = split_vect.begin(); e != split_vect.end(); e++) {
-                std::cout << *e << " ";
-            }
-            std::cout << "\n";
+            async_send_only("OK");
+        } else if (rtype_common::starts_with(message, "KEY")){
+            std::vector<std::string> split_vect = rtype_common::split(message, ":");
             std::string key_value = split_vect[1];
             if (key_value == "LEFT") {
                 _game_state.player.x = _game_state.player.x - PLAYER_SPEED;
-                boost::shared_ptr<std::string> response(
-                    new std::string("PLAYER:" + std::to_string(_game_state.player.x)
-                                    + ";" + std::to_string(_game_state.player.y)));
-                _socket.async_send_to(boost::asio::buffer(*response), _remote_endpoint,
-                boost::bind(&Server::handle_send, this, response,
-                    boost::asio::placeholders::error,
-                    boost::asio::placeholders::bytes_transferred));
-                std::cout << "[MESSAGE LOG] Sent: " << *response << "\n";
+                std::string response = "PLAYER:" + std::to_string(_game_state.player.x) + 
+                                       ";" + std::to_string(_game_state.player.y);
+                async_send_only(response);
             }
         }
 
@@ -76,9 +59,28 @@ void Server::handle_receive(const boost::system::error_code& error,
 }
 
 
-void Server::handle_send(boost::shared_ptr<std::string> /*message*/,
+void Server::async_send_only(std::string message) {
+    /**
+     * Asynchronous (non-blocking) send with an empty callback. 
+     **/
+    _socket.async_send_to(boost::asio::buffer(message), 
+                          _remote_endpoint,
+                          boost::bind(&Server::handle_send_empty, 
+                                      this, 
+                                      message,
+                                      boost::asio::placeholders::error,
+                                      boost::asio::placeholders::bytes_transferred
+                          ));
+    std::cout << "[NETWORK LOG] Queued async send for: " << message << "\n";
+}
+
+
+void Server::handle_send_empty(
+    // boost::shared_ptr<std::string> /*message*/,
+    std::string message,
     const boost::system::error_code& /*error*/,
     std::size_t /*bytes_transferred*/) {
+    std::cout << "[NETWORK LOG] Sent: " << message << "\n";
 }
 
 
