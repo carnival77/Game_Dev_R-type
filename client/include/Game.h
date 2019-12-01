@@ -6,21 +6,35 @@
 #include "background.h"
 #include <boost/asio.hpp>
 #include <boost/array.hpp>
+#include <boost/bind.hpp>
 #include "cScreen.h"
-<<<<<<< HEAD
 using boost::asio::ip::udp;
-=======
 #include "cTexture.h"
 #include "network.hpp"
->>>>>>> 98caf0a4099d35e9b9a8ebb4170077bdd9a17e27
+#include <thread>
+using namespace std;
 
 class Game : public cScreen
 {
 public:
-    Game(std::string hostname, unsigned short port);
+    Game(boost::asio::io_context& io_context,std::string hostname, unsigned short port);
+    
+    // Network
+    boost::asio::ip::udp::endpoint client_endpoint; 
+    boost::asio::ip::udp::endpoint server_endpoint; 
+    boost::array<char, 256> recv_buffer_;
+    boost::asio::ip::udp::socket socket;
+    boost::asio::io_context io_context;
+    std::string hostname;
+    unsigned short port;
+    int Main_loop(sf::RenderWindow &window, vector<cScreen*> Screens);
+
+    void start_receive();
+    //
     virtual int run(sf::RenderWindow &window);
 
 private:
+
     int processEvents(sf::RenderWindow &window);
     int update(sf::RenderWindow &window);
     void render(sf::RenderWindow &window);
@@ -35,4 +49,18 @@ private:
     cTexture textures;
 
     // Network network;
+    void sendToServer(string msg);
+
+    void handle_receive(const boost::system::error_code& error,
+        std::size_t /*bytes_transferred*/);
+
+    void handle_send(boost::shared_ptr<std::string> /*message*/,
+        const boost::system::error_code& /*error*/,
+        std::size_t /*bytes_transferred*/);
+
+    void Init(boost::asio::io_context& io_context,std::string hostname, unsigned short port);
+    
+    void handle_write(const boost::system::error_code& e);
+
+    void do_write(Game msg);
 };

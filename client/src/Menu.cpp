@@ -1,4 +1,7 @@
+#include <iostream>
+#include "Game.h"
 #include "Menu.h"
+using namespace std;
 
 Menu::Menu(float width, float height)
 {
@@ -54,9 +57,11 @@ int Menu::processEvents(sf::RenderWindow &window)
                 switch (selectedItemIndex)
                 {
                 case 0:
+                //play button
                     return 0;
                     break;
                 case 1: 
+                //exit button
                     return -1;
                     break;
                 }

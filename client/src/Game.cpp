@@ -1,58 +1,62 @@
 #include "Game.h"
+#include "screens.h"
 #include <iostream>
 #include <string>
-
-
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <boost/asio.hpp>
+#include <boost/asio/basic_datagram_socket.hpp>
+using namespace std;
 using boost::asio::ip::udp;
 
-
-Game::Game(std::string hostname, unsigned short port)
-// : network(hostname, port)
+Game::Game(boost::asio::io_context& io_context,std::string hostname, unsigned short port)
+: socket(io_context)
 {
     loadTextures();
     player.setAnimation(textures, 1);
     background.setTexture(textures.get(Textures::GameBackground));
 
-    //
-	// establish connection with server
-    //
-	// network.write(std::string("HELLO\n"));
+    // Network
     int max_length = 1024;
 
-    boost::asio::io_context io_context;
-
-    // FIXME: what does the endpoint represent here? Why we need a different port number from the server?
-    udp::socket socket(io_context, udp::endpoint(udp::v4(), port+1));
-
     udp::resolver resolver(io_context);
-    // address type, hostname, service type (which port to bind to)
-    // we can either leave service empty and set port manually, or pass the port as a string
-    udp::resolver::results_type endpoints = resolver.resolve(udp::v4(), hostname, std::to_string(port));
-    udp::endpoint remote_endpoint = *endpoints.begin();
+    udp::endpoint server_endpoint =
+    *resolver.resolve(udp::v4(), hostname, std::to_string(port));
 
-    std::cout << "Enter message: ";
-    char request[max_length];
-    std::cin.getline(request, max_length);
-    size_t request_length = std::strlen(request);
-    socket.send_to(boost::asio::buffer(request, request_length), remote_endpoint);
-    // std::string payload;
-    // std::cin >> payload;
-    // socket.send_to(boost::asio::buffer(payload), remote_endpoint);
+    socket.open(udp::v4());
 
-    char reply[max_length];
-    udp::endpoint sender_endpoint;
-    size_t reply_length = socket.receive_from(
-        boost::asio::buffer(reply, max_length), sender_endpoint);
-    std::cout << "Reply is: ";
-    std::cout.write(reply, reply_length);
-    std::cout << "\n";    //
+cout<<"Test1"<<endl;
+    // boost::array<char, 1> send_buf  = { 0 };
+    // socket.send_to(boost::asio::buffer(send_buf), server_endpoint);
+
+    //string testmsg = "This is client. to server\n";
+
+    //sendToServer(testmsg);
+
     //
 
-	// std::cout << network.read();
+    boost::shared_ptr<std::string> message(
+            new std::string("This is client. to server\n"));
+    //         // from server to client
+
+            
+
+    cout<<"Test2"<<endl;
+
+   // boost::array<char, 128> message2  = {d};
+
+    //sendToServer(message);
+    // sendToServer(message);
+    socket.async_send_to(boost::asio::buffer(recv_buffer_), server_endpoint,
+        boost::bind(&Game::handle_send, this, message,
+            boost::asio::placeholders::error,
+            boost::asio::placeholders::bytes_transferred));
+            
+cout<<"Test3"<<endl;
+    start_receive();
+    cout<<"Test4"<<endl;
+
 }
 
 void Game::loadTextures()
@@ -63,17 +67,18 @@ void Game::loadTextures()
     textures.load(Textures::GameBackground, "./textures/background.jpg");
 }
 
-
+///-----------------------------------------------------------//
 int Game::run(sf::RenderWindow &window)
 {
     int state = processEvents(window);
-    int state2 = update(window);
+    int state2 = update(window); // 0  = keep processing.
     render(window);
     if(state != 0)
         return state;
     else 
         return state2;
 }
+///-----------------------------------------------------------//
 
 int Game::processEvents(sf::RenderWindow &window)
 {
@@ -84,11 +89,13 @@ int Game::processEvents(sf::RenderWindow &window)
         {
         case sf::Event::Closed:
             return -1;
+            //cout<<"exit1"<<endl;
             break;
         case sf::Event::KeyPressed:
             switch (event.key.code)
             {
                 case sf::Keyboard::Escape:
+                //cout<<"play"<<endl;
                     return 1;
                     break;
             }
@@ -146,6 +153,7 @@ int Game::update(sf::RenderWindow &window)
             }
         }
     }
+    ///-----------------------------------------------------------//
     //Check player collisions
     sf::FloatRect playerBox = player.sprite.getGlobalBounds();
     for (size_t i = 0; i < enemies.size(); i++)
@@ -156,6 +164,7 @@ int Game::update(sf::RenderWindow &window)
             return -1;
         }
     }
+    ///-----------------------------------------------------------//
     return 0;
 }
 
@@ -187,3 +196,63 @@ void Game::render(sf::RenderWindow &window)
     // window.draw(dummy2);
     window.display();
 }
+
+void Game::start_receive()
+{
+    //initialize the rmoete_endpoint_
+    //boost::asio::ip::udp::endpoint sender_endpoint;
+    socket.async_receive_from(
+        //boost::asio::buffer(recv_buffer_), client_endpoint,
+        boost::asio::buffer(recv_buffer_), server_endpoint,
+        boost::bind(&Game::handle_receive, this,
+            boost::asio::placeholders::error,
+            boost::asio::placeholders::bytes_transferred));
+    cout<<"Test5"<<endl;
+    size_t len = socket.receive_from(
+        //boost::asio::buffer(recv_buffer_), client_endpoint); // succed rate : 50%
+         boost::asio::buffer(recv_buffer_), server_endpoint); // same
+    cout<<"Test6"<<endl;
+    std::cout << "Reply from server is: ";
+    std::cout.write(recv_buffer_.data(), len);
+    cout<<"Test7"<<endl;
+}
+
+void Game::handle_receive(const boost::system::error_code& error,
+    std::size_t bytes_transferred)
+{
+
+    if (!error || error == boost::asio::error::message_size)
+    {
+        // std::string receive_json = std::string(recv_buffer_.begin(),
+        //     recv_buffer_.begin() + bytes_transferred);
+        
+
+        // else if (type == "newplayer") {
+        //     sf::Vector2f initialpos{ x,y };
+        //     std::cout << "player id" + playerid << std::endl;
+        //     enemies.push_back(std::make_unique<EnemyPlayer>(m_game, playerid, initialpos));
+        // }
+
+        start_receive();
+    }
+    // else {
+    //     std::cout << error.message() << std::endl;
+    // }
+}
+
+void Game::handle_send(boost::shared_ptr<std::string> message,
+    const boost::system::error_code& error,
+    std::size_t bytes_transferre)
+{
+}
+
+// void Game::sendToServer(string msg) {
+//     boost::shared_ptr<std::string> message(
+//             new std::string(msg));
+//             // from server to client
+
+//     socket.async_send_to(boost::asio::buffer(recv_buffer_), server_endpoint,
+//         boost::bind(&Game::handle_send, this, message,
+//             boost::asio::placeholders::error,
+//             boost::asio::placeholders::bytes_transferred));
+// }
