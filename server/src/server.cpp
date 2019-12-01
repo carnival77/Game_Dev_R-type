@@ -71,12 +71,17 @@ void Server::command_key(std::string message) {
 }
 
 
+std::string pack_player(int player_idx, float x, float y, std::string animation) {
+    return "PLAYER:" + std::to_string(player_idx) +
+            ";" + std::to_string(x) + ";" + std::to_string(y) +
+            ";" + animation;
+}
+
+
 void Server::command_key_left(std::string message) {
     _game_state.player.x = _game_state.player.x - PLAYER_SPEED;
-    // std::string response = "PLAYER:" + std::to_string(_game_state.player.x) + 
-    //                         ";" + std::to_string(_game_state.player.y);
     int player_idx = 0;
-    std::string response = "PLAYER:" + std::to_string(player_idx) + ";LEFT";
+    std::string response = pack_player(player_idx, _game_state.player.x, _game_state.player.y, "LEFT");
     async_send_only(response);
 }
 
@@ -84,7 +89,7 @@ void Server::command_key_left(std::string message) {
 void Server::command_key_right(std::string message) {
     _game_state.player.x = _game_state.player.x + PLAYER_SPEED;
     int player_idx = 0;
-    std::string response = "PLAYER:" + std::to_string(player_idx) + ";RIGHT";
+    std::string response = pack_player(player_idx, _game_state.player.x, _game_state.player.y, "RIGHT");
     async_send_only(response);
 }
 
@@ -92,7 +97,7 @@ void Server::command_key_right(std::string message) {
 void Server::command_key_up(std::string message) {
     _game_state.player.y = _game_state.player.y - PLAYER_SPEED;
     int player_idx = 0;
-    std::string response = "PLAYER:" + std::to_string(player_idx) + ";UP";
+    std::string response = pack_player(player_idx, _game_state.player.x, _game_state.player.y, "UP");
     async_send_only(response);
 }
 
@@ -100,7 +105,7 @@ void Server::command_key_up(std::string message) {
 void Server::command_key_down(std::string message) {
     _game_state.player.y = _game_state.player.y + PLAYER_SPEED;
     int player_idx = 0;
-    std::string response = "PLAYER:" + std::to_string(player_idx) + ";DOWN";
+    std::string response = pack_player(player_idx, _game_state.player.x, _game_state.player.y, "DOWN");
     async_send_only(response);
 }
 
