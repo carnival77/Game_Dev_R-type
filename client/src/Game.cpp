@@ -1,6 +1,8 @@
 #include "Game.h"
 #include <iostream>
 #include <string>
+#include "rtype_common/parsing.hpp"
+#include "rtype_common/protocol.hpp"
 
 
 #define SERVER
@@ -102,10 +104,17 @@ void Game::update()
     //Player shooting mechanic
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
     {
-        network.write("KEY:SPACE");
         if ((clock.getElapsedTime().asSeconds() - playerShoot) >= PLAYER_RELOAD)
         {
-            missiles.push_back(player->shoot());      
+            network.write("KEY:SPACE");
+            std::string message = network.read_payload();
+            if (rtype_common::starts_with(message, "MISSILE_NEW")) {
+                auto [x, y] = rtype_common::unpack_missile_new(message);
+                Missile new_missile(data, x, y);
+                missiles.push_back(new_missile);
+            }
+            
+            // missiles.push_back(player->shoot());  
             playerShoot = clock.getElapsedTime().asSeconds();
         }      
     }

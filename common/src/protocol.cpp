@@ -21,4 +21,15 @@ namespace rtype_common {
         return std::make_tuple(player_idx, x, y, animation);
     }
 
+    std::string pack_missile_new(float x, float y) {
+        return "MISSILE_NEW:" + std::to_string(x) + ";" + std::to_string(y);
+    }
+
+    std::tuple<float, float> unpack_missile_new(std::string message) {
+        std::vector<std::string> split_vect = rtype_common::split(message, ":");
+        split_vect = rtype_common::split(split_vect[1], ";");
+        float x = std::stof(split_vect[0]);
+        float y = std::stof(split_vect[1]);
+        return std::make_tuple(x, y);
+    }
 }

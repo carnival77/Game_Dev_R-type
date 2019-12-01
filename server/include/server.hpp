@@ -29,6 +29,7 @@ class Server {
         void command_key_right(std::string message);
         void command_key_up(std::string message);
         void command_key_down(std::string message);
+        void command_key_space(std::string message);
 
         boost::asio::io_context _io_context;
         udp::socket _socket;

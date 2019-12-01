@@ -1,3 +1,4 @@
+#include <vector>
 
 
 struct Player {
@@ -6,6 +7,13 @@ struct Player {
 };
 
 
+struct Missile {
+    float x;
+    float y;
+};
+
+
 struct GameState {
     Player player;
+    std::vector<Missile> missiles;
 };

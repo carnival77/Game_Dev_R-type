@@ -10,6 +10,9 @@ Player::Player(AppDataRef data,int x, int y, int color)
     this->data = data;
     sprite.setPosition(x, y);
     setAnimation(color);
+
+    // std::cout << "width: " << sprite.getTextureRect().width << "\n";
+    // std::cout << "height: " << sprite.getTextureRect().height << "\n";
 }
 
 void Player::setAnimation(int color)

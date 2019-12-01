@@ -7,6 +7,8 @@
 
 
 #define PLAYER_SPEED 4.0f
+#define PLAYER_RECT_WIDTH 33
+#define PLAYER_RECT_HEIGHT 17
 
 
 Server::Server(std::string hostname, unsigned short port)
@@ -68,6 +70,8 @@ void Server::command_key(std::string message) {
         command_key_up(message);
     } else if (key_value == "DOWN") {
         command_key_down(message);
+    } else if (key_value == "SPACE") {
+        command_key_space(message);
     }
 }
 
@@ -100,6 +104,14 @@ void Server::command_key_down(std::string message) {
     _game_state.player.y = _game_state.player.y + PLAYER_SPEED;
     int player_idx = 0;
     std::string response = rtype_common::pack_player(player_idx, _game_state.player.x, _game_state.player.y, "DOWN");
+    async_send_only(response);
+}
+
+
+void Server::command_key_space(std::string message) {
+    Missile new_missile = {x: _game_state.player.x+PLAYER_RECT_WIDTH, y: _game_state.player.y+PLAYER_RECT_HEIGHT/2};
+    _game_state.missiles.push_back(new_missile);
+    std::string response = rtype_common::pack_missile_new(new_missile.x, new_missile.y);
     async_send_only(response);
 }
 
