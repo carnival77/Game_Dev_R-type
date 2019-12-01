@@ -14,6 +14,7 @@ class Network {
         void write(std::string);
         size_t read();
         std::string extract_payload(size_t reply_length);
+        std::string read_payload();
 
         char reply[MAX_DATAGRAM_LENGTH];
         int max_length = MAX_DATAGRAM_LENGTH;

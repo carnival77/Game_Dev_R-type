@@ -30,7 +30,6 @@ size_t Network::read() {
     **/
     size_t reply_length = _socket.receive_from(
         boost::asio::buffer(reply, max_length), _remote_endpoint);
-	std::cout << "[NETWORK LOG] Got: " << extract_payload(reply_length) << " ( " << reply_length << " bytes )\n";
     return reply_length;
 }
 
@@ -42,3 +41,14 @@ std::string Network::extract_payload(size_t reply_length) {
     std::string data(reply);
     return data.substr(0, reply_length);
 }
+
+
+std::string Network::read_payload() {
+    /**
+     * Shortcut for calling read() and extract_payload() in one step.
+     **/
+    size_t reply_length = read();
+    std::string payload = extract_payload(reply_length);
+    std::cout << "[NETWORK LOG] Got: " << payload << " ( " << reply_length << " bytes )\n";
+    return payload;
+};

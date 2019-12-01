@@ -42,20 +42,66 @@ void Server::handle_receive(const boost::system::error_code& error,
     } else {
         std::string message = extract_payload(bytes_transferred);
         if (message == "HELLO") {
-            async_send_only("OK");
+            command_hello(message);
         } else if (rtype_common::starts_with(message, "KEY")){
-            std::vector<std::string> split_vect = rtype_common::split(message, ":");
-            std::string key_value = split_vect[1];
-            if (key_value == "LEFT") {
-                _game_state.player.x = _game_state.player.x - PLAYER_SPEED;
-                std::string response = "PLAYER:" + std::to_string(_game_state.player.x) + 
-                                       ";" + std::to_string(_game_state.player.y);
-                async_send_only(response);
-            }
+            command_key(message);
         }
-
         start_receive();
     }
+}
+
+
+void Server::command_hello(std::string message) {
+    async_send_only("OK");
+}
+
+
+void Server::command_key(std::string message) {
+    std::vector<std::string> split_vect = rtype_common::split(message, ":");
+    std::string key_value = split_vect[1];
+    if (key_value == "LEFT") {
+        command_key_left(message);
+    } else if (key_value == "RIGHT") {
+        command_key_right(message);
+    } else if (key_value == "UP") {
+        command_key_up(message);
+    } else if (key_value == "DOWN") {
+        command_key_down(message);
+    }
+}
+
+
+void Server::command_key_left(std::string message) {
+    _game_state.player.x = _game_state.player.x - PLAYER_SPEED;
+    // std::string response = "PLAYER:" + std::to_string(_game_state.player.x) + 
+    //                         ";" + std::to_string(_game_state.player.y);
+    int player_idx = 0;
+    std::string response = "PLAYER:" + std::to_string(player_idx) + ";LEFT";
+    async_send_only(response);
+}
+
+
+void Server::command_key_right(std::string message) {
+    _game_state.player.x = _game_state.player.x + PLAYER_SPEED;
+    int player_idx = 0;
+    std::string response = "PLAYER:" + std::to_string(player_idx) + ";RIGHT";
+    async_send_only(response);
+}
+
+
+void Server::command_key_up(std::string message) {
+    _game_state.player.y = _game_state.player.y - PLAYER_SPEED;
+    int player_idx = 0;
+    std::string response = "PLAYER:" + std::to_string(player_idx) + ";UP";
+    async_send_only(response);
+}
+
+
+void Server::command_key_down(std::string message) {
+    _game_state.player.y = _game_state.player.y + PLAYER_SPEED;
+    int player_idx = 0;
+    std::string response = "PLAYER:" + std::to_string(player_idx) + ";DOWN";
+    async_send_only(response);
 }
 
 

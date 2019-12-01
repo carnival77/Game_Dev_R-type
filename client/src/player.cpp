@@ -36,32 +36,65 @@ void Player::update()
     sprite.setTextureRect(animation[2]);
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)){
         network -> write("KEY:LEFT");
-        
-        std::string reply = network -> extract_payload(network -> read());
+
+        std::string reply = network -> read_payload();
         std::vector<std::string> split_vect = rtype_common::split(reply, ":");
         split_vect = rtype_common::split(split_vect[1], ";");
+        rtype_common::print(split_vect);
+        int player_idx = std::stoi(split_vect[0]);
+        std::string key = split_vect[1];
+        if (key == "LEFT") {
+            sprite.move(sf::Vector2f(-PLAYER_SPEED,0.0));
+        }
 
-        float x = std::stof(split_vect[0]);
-        float y = std::stof(split_vect[1]);
-
-        sprite.setPosition(x, y);
-        // sprite.setPosition(sprite.getPosition()+sf::Vector2f(-PLAYER_SPEED,0.0));
-        // sprite.move(sf::Vector2f(-PLAYER_SPEED,0.0));
+        // std::string reply = network -> read_payload();
+        // std::vector<std::string> split_vect = rtype_common::split(reply, ":");
+        // split_vect = rtype_common::split(split_vect[1], ";");
+        // float x = std::stof(split_vect[0]);
+        // float y = std::stof(split_vect[1]);
+        // sprite.setPosition(x, y);
     }
-
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)){
         network -> write("KEY:RIGHT");
-        sprite.move(sf::Vector2f(PLAYER_SPEED,0.0));
+
+        std::string reply = network -> read_payload();
+        std::vector<std::string> split_vect = rtype_common::split(reply, ":");
+        split_vect = rtype_common::split(split_vect[1], ";");
+        rtype_common::print(split_vect);
+        int player_idx = std::stoi(split_vect[0]);
+        std::string key = split_vect[1];
+        if (key == "RIGHT") {
+            sprite.move(sf::Vector2f(PLAYER_SPEED,0.0));
+        }
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)){
         network -> write("KEY:UP");
-        sprite.setTextureRect(animation[4]);
-        sprite.move(sf::Vector2f(0.0,-PLAYER_SPEED));
+
+        std::string reply = network -> read_payload();
+        std::vector<std::string> split_vect = rtype_common::split(reply, ":");
+        split_vect = rtype_common::split(split_vect[1], ";");
+        rtype_common::print(split_vect);
+        int player_idx = std::stoi(split_vect[0]);
+        std::string key = split_vect[1];
+        if (key == "UP") {
+            sprite.setTextureRect(animation[4]);
+            sprite.move(sf::Vector2f(0.0,-PLAYER_SPEED));
+        }
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)){
         network -> write("KEY:DOWN");
-        sprite.setTextureRect(animation[0]);
-        sprite.move(sf::Vector2f(0.0,PLAYER_SPEED));
+
+        std::string reply = network -> read_payload();
+        std::vector<std::string> split_vect = rtype_common::split(reply, ":");
+        split_vect = rtype_common::split(split_vect[1], ";");
+        rtype_common::print(split_vect);
+        int player_idx = std::stoi(split_vect[0]);
+        std::string key = split_vect[1];
+
+        if (key == "DOWN") {
+            sprite.setTextureRect(animation[0]);
+            sprite.move(sf::Vector2f(0.0,PLAYER_SPEED));
+        }
     }
 }
 

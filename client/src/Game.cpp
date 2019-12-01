@@ -17,7 +17,7 @@ Game::Game(AppDataRef data,std::string hostname, unsigned short port)
     //
     #ifdef SERVER
 	network.write("HELLO");
-    if (network.extract_payload(network.read()) != "OK") {
+    if (network.read_payload() != "OK") {
         std::cerr << "Could not connect to server.\n";
     } else {
         std::cout << "Connected to server.\n";
