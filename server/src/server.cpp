@@ -4,16 +4,23 @@
 #include <vector>
 #include "rtype_common/parsing.hpp"
 #include "rtype_common/protocol.hpp"
+#include "timer.hpp"
 
 
 #define PLAYER_SPEED 4.0f
 #define PLAYER_RECT_WIDTH 33
 #define PLAYER_RECT_HEIGHT 17
+#define PLAYER_RELOAD 400  // in milliseconds
 
 
 Server::Server(std::string hostname, unsigned short port)
     : _socket(_io_context, udp::endpoint(udp::v4(), port)) 
     {
+    // initialize player
+    _game_state.player.lastShootTime = Clock::now();
+    std::cout << "Initial time: " << _game_state.player.lastShootTime.time_since_epoch().count() << "\n";
+
+    // start listener
     start_receive();
     _io_context.run();
 }
@@ -109,10 +116,29 @@ void Server::command_key_down(std::string message) {
 
 
 void Server::command_key_space(std::string message) {
-    Missile new_missile = {x: _game_state.player.x+PLAYER_RECT_WIDTH, y: _game_state.player.y+PLAYER_RECT_HEIGHT/2};
-    _game_state.missiles.push_back(new_missile);
-    std::string response = rtype_common::pack_missile_new(new_missile.x, new_missile.y);
-    async_send_only(response);
+    // check shooting delay with timer with a server-side clock
+    auto t = Clock::now();
+    auto diff = t - _game_state.player.lastShootTime;
+    auto diff_millis = std::chrono::duration_cast<std::chrono::milliseconds>(diff);
+    auto f_secs = std::chrono::duration_cast<std::chrono::duration<float>>(diff);
+    if (PLAYER_RELOAD <= diff_millis.count()) {
+        // spawn a new missile
+        std::cout << "Time diff: " << t.time_since_epoch().count() <<
+        " - " << _game_state.player.lastShootTime.time_since_epoch().count() <<
+        " = " << diff.count() << "\n";
+        std::cout << diff_millis.count() << '\n';
+        std::cout << f_secs.count() << '\n';
+
+        Missile new_missile = {x: _game_state.player.x+PLAYER_RECT_WIDTH, y: _game_state.player.y+PLAYER_RECT_HEIGHT/2};
+        _game_state.missiles.push_back(new_missile);
+        std::string response = rtype_common::pack_missile_new(new_missile.x, new_missile.y);
+        async_send_only(response);
+
+        _game_state.player.lastShootTime = Clock::now();
+    } else {
+        // ignore
+        async_send_only("NOP");
+    }
 }
 
 

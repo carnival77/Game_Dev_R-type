@@ -12,8 +12,8 @@ int main(int argc, char* argv[]) {
       std::string hostname = argv[1];
       unsigned short port = std::stoi(argv[2]);
 
-      Server server(hostname, port);
       std::cout << "Listening on port " << port << " host " << hostname << "\n";
+      Server server(hostname, port);
     } catch (std::exception& e) {
       std::cerr << e.what() << std::endl;
     }

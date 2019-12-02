@@ -1,9 +1,11 @@
 #include <vector>
+#include "timer.hpp"
 
 
 struct Player {
     float x = 0;
     float y = 0;
+    time_point lastShootTime;
 };
 
 

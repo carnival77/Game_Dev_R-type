@@ -104,8 +104,9 @@ void Game::update()
     //Player shooting mechanic
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
     {
-        if ((clock.getElapsedTime().asSeconds() - playerShoot) >= PLAYER_RELOAD)
-        {
+        // client-side limiting of key presses
+        // to avoid flooding the server
+        if ((clock.getElapsedTime().asSeconds() - playerShoot) >= PLAYER_RELOAD) {
             network.write("KEY:SPACE");
             std::string message = network.read_payload();
             if (rtype_common::starts_with(message, "MISSILE_NEW")) {
@@ -113,10 +114,8 @@ void Game::update()
                 Missile new_missile(data, x, y);
                 missiles.push_back(new_missile);
             }
-            
-            // missiles.push_back(player->shoot());  
             playerShoot = clock.getElapsedTime().asSeconds();
-        }      
+        }
     }
 
     //Update missiles and check collisions
